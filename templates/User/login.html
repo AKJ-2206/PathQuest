@@ -1,4 +1,4 @@
-{% load static %}
+{% comment %} {% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,6 +27,47 @@
         </label>
         <a href="#">Forgot password?</a>
       </div>
+      <button type="submit">Log In</button>
+      <div class="register">
+        <p>Don't have an account? <a href="{% url 'registration' %}">Register</a></p>
+      </div>
+    </form>
+  </div>
+</body>
+</html> {% endcomment %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | PathQuest</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <div class="wrapper">
+    <!-- The form action should point to the login URL -->
+    <form action="{% url 'user_login' %}" method="POST">
+      {% csrf_token %}
+      <h2>Login</h2>
+      <div class="input-field">
+        <!-- Correct the name attribute for the username field -->
+        <input type="text" name="username" required>
+        <label>Enter your username</label>
+      </div>
+      <div class="input-field">
+        <input type="password" name="password" required>
+        <label>Enter your password</label>
+      </div>
+      <div class="forget">
+        <label for="remember">
+          <input type="checkbox" id="remember" name="remember">
+          <p>Remember me</p>
+        </label>
+        <a href="#">Forgot password?</a>
+      </div>
+      <!-- The button will submit the form to the Django login view -->
       <button type="submit">Log In</button>
       <div class="register">
         <p>Don't have an account? <a href="{% url 'registration' %}">Register</a></p>

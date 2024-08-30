@@ -65,7 +65,11 @@
                       <ul class="nav">
                           <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
                           <!-- <li><a href="meetings.html">Meetings</a></li> -->
-                          <li><a href="{% url 'login' %}">Login</a></li> 
+                          {% if user.is_authenticated %}
+                            <li><a href="{% url 'user_logout' %}">Logout</a></li> 
+                          {% else %}
+                            <li><a href="{% url 'user_login' %}">Login</a></li> 
+                          {% endif %}
                           <li class="scroll-to-section"><a href="#apply">Apply Now</a></li>
                           <li class="scroll-to-section"><a href="#courses">Courses</a></li> 
                           <li class="has-sub">
