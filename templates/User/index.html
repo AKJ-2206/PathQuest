@@ -110,7 +110,7 @@
                 {% if user.is_authenticated %}
                   <div><a href="http://www.youtube.com">Join Us Now!</a></div>
                 {% else %}
-                <div><a href="{% url 'login' %}">Join Us Now!</a></div>
+                <div><a href="{% url 'user_login' %}">Join Us Now!</a></div>
                 {% endif %}
               </div>
           </div>
