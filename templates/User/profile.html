@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Profile Page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+        
+        :root {
+            --primary-color: #6b46c1;
+            --secondary-color: #805ad5;
+            --background-color: #f0e7ff;
+            --text-color: #2d3748;
+            --card-bg-color: #ffffff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .profile-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            background-color: var(--card-bg-color);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .profile-pic-wrapper {
+            text-align: center;
+            margin-right: 50px;
+        }
+
+        .profile-pic {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--secondary-color);
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-pic-wrapper button {
+            margin-top: 15px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .profile-pic-wrapper button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .bio-section {
+            flex-grow: 1;
+        }
+
+        .bio-section textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+            font-size: 16px;
+            resize: none;
+            background-color: #f8f9fb;
+            transition: all 0.3s ease;
+        }
+
+        .bio-section textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0px 0px 10px rgba(128, 90, 213, 0.3);
+        }
+
+        .profile-details {
+            margin-top: 40px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 32px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .course-sections {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .course-category {
+            flex-basis: 32%;
+            background-color: #f8f9fb;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .course-category:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-category h3 {
+            color: var(--secondary-color);
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 12px;
+            background-color: var(--card-bg-color);
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        li:hover {
+            background-color: var(--secondary-color);
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .profile-pic-wrapper {
+                margin-right: 0;
+                margin-bottom: 30px;
+            }
+
+            .course-sections {
+                flex-direction: column;
+            }
+
+            .course-category {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-pic-wrapper">
+                <img src="/api/placeholder/180/180" id="profilePic" alt="Profile Picture" class="profile-pic">
+                <input type="file" id="uploadPic" style="display: none;" accept="image/*">
+                <button onclick="document.getElementById('uploadPic').click()">Change Picture</button>
+            </div>
+            <div class="bio-section">
+                <textarea id="bio" placeholder="Write your bio here..."></textarea>
+            </div>
+        </div>
+        
+        <div class="profile-details">
+            <h2>My Learning Journey</h2>
+            <div class="course-sections">
+                <div class="course-category">
+                    <h3>Purchased Courses</h3>
+                    <ul>
+                        <li>Advanced Web Development</li>
+                        <li>Machine Learning Basics</li>
+                        <li>UX/UI Design Fundamentals</li>
+                    </ul>
+                </div>
+                <div class="course-category">
+                    <h3>Liked Courses</h3>
+                    <ul>
+                        <li>Data Science with Python</li>
+                        <li>Mobile App Development</li>
+                        <li>Digital Marketing Strategies</li>
+                    </ul>
+                </div>
+                <div class="course-category">
+                    <h3>Courses in Cart</h3>
+                    <ul>
+                        <li>Blockchain Technology</li>
+                        <li>Cloud Computing Essentials</li>
+                        <li>Artificial Intelligence Ethics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadPic').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                document.getElementById('profilePic').src = e.target.result;
+            }
+            
+            reader.readAsDataURL(file);
+        });
+
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add animation to course items
+        const courseItems = document.querySelectorAll('.course-category li');
+        courseItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.style.transform = 'translateX(10px)';
+            });
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'translateX(0)';
+            });
+        });
+    </script>
+</body>
+</html>

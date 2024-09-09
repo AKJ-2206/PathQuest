@@ -4,6 +4,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     return render(request, 'User/index.html')
@@ -39,3 +42,6 @@ def registration(request):
 def user_logout(request):
     logout(request)
     return render(request, 'User/login.html')
+
+def profile_view(request):
+    return render(request, 'profile.html', {'user': request.user})
