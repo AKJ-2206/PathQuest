@@ -7,6 +7,9 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from .models import ContactMessage
+from django.contrib import messages
+
 
 def index(request):
     return render(request, 'User/index.html')
@@ -44,4 +47,28 @@ def user_logout(request):
     return render(request, 'User/login.html')
 
 def profile_view(request):
-    return render(request, 'profile.html', {'user': request.user})
+    return render(request, 'User/profile.html', {'user': request.user})
+
+def contact_message(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        
+        # Create and save the ContactMessage instance
+        ContactMessage.objects.create(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message
+        )
+        
+        # Show a success message
+        messages.success(request, 'Your message has been sent successfully!')
+        
+        # Redirect to the homepage or another page
+        return redirect('index')  # Adjust the redirect as needed
+        
+    # If not a POST request, redirect to the contact form or another page
+    return redirect('index')
