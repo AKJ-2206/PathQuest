@@ -1,5 +1,43 @@
-venv
-*.png
-*.jpg
-*.jpeg
-*.gif
+# Virtual environment
+myenv/
+
+# Python byte-compiled files
+__pycache__/
+*.py[cod]
+
+# Django-specific
+*.log
+db.sqlite3
+
+# macOS system files
+.DS_Store
+
+# Editor-specific files
+.vscode/
+.idea/
+
+# Environment variables
+.env
+
+cat << EOF >> .gitignore
+# Virtual environment
+myenv/
+
+# Python byte-compiled files
+__pycache__/
+*.py[cod]
+
+# Django-specific
+*.log
+db.sqlite3
+
+# macOS system files
+.DS_Store
+
+# Editor-specific files
+.vscode/
+.idea/
+
+# Environment variables
+.env
+EOF
