@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ user.username }}'s Profile</title>
+    <title>Update Profile</title>
     <style>
         :root {
             --primary-color: #6200EA;
@@ -19,17 +19,17 @@
             padding: 20px;
             color: var(--text-color);
         }
-        .profile-container {
-            max-width: 800px;
+        .profile-update-container {
+            max-width: 600px;
             margin: auto;
             background: #ffffff;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
-        .profile-header {
+        .form-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         .profile-pic-wrapper {
             position: relative;
@@ -97,104 +97,43 @@
         .submit-btn:hover {
             background-color: var(--secondary-color);
         }
-        .section-title {
-            font-size: 24px;
-            margin-top: 30px;
-            border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 10px;
-            color: var(--primary-color);
-        }
-        .courses-list, .liked-courses, .cart-items {
-            margin-top: 20px;
-        }
-        .courses-list ul, .liked-courses ul, .cart-items ul {
-            list-style: none;
-            padding: 0;
-        }
-        .courses-list li, .liked-courses li, .cart-items li {
-            background: #f0f0f0;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease-in-out;
-        }
-        .courses-list li:hover, .liked-courses li:hover, .cart-items li:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
     </style>
 </head>
 <body>
-    <div class="profile-container">
-        <div class="profile-header">
+    <div class="profile-update-container">
+        <div class="form-header">
+            <h2>Update Profile</h2>
+        </div>
+
+        <form method="POST" action="{% url 'update_profile' %}" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="profile-pic-wrapper">
                 {% if user.profile.profile_photo %}
                     <img src="{{ user.profile.profile_photo.url }}" 
                          id="profilePic" 
                          alt="Profile Picture" 
-                         class="profile-pic"
-                         onerror="this.src='{% static 'images/default_profile.png' %}';">
+                         class="profile-pic">
                 {% else %}
                     <img src="{% static 'images/default_profile.png' %}" 
                          id="profilePic" 
                          alt="Profile Picture" 
-                         class="profile-pic"
-                         onerror="this.src='{% static 'images/default_profile.png' %}';">
+                         class="profile-pic">
                 {% endif %}
                 <label for="uploadPic" class="change-pic-overlay">
                     <span class="change-pic-text">Change Picture</span>
                 </label>
                 <input type="file" id="uploadPic" name="profile_photo" accept="image/*" style="display: none;">
             </div>
-            <h2>{{ user.username }}</h2>
-        </div>
 
-        <form id="profileForm" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
             <div class="bio-section">
                 <textarea name="description" placeholder="Write your bio here...">{{ user.profile.description }}</textarea>
             </div>
-            <!-- Update Profile Button -->
-            <button type="submit" class="submit-btn">Update Profile</button>
+
+            <button type="submit" class="submit-btn">Save Changes</button>
         </form>
-
-        <h2 class="section-title">Courses Bought</h2>
-        <div class="courses-list">
-            <ul>
-                {% for course in user.profile.courses_bought.all %}
-                    <li>{{ course.title }}</li>
-                {% empty %}
-                    <li>No courses bought yet.</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <h2 class="section-title">Liked Courses</h2>
-        <div class="liked-courses">
-            <ul>
-                {% for course in user.profile.liked_courses.all %}
-                    <li>{{ course.title }}</li>
-                {% empty %}
-                    <li>No liked courses yet.</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <h2 class="section-title">Cart</h2>
-        <div class="cart-items">
-            <ul>
-                {% for item in user.profile.cart_items.all %}
-                    <li>{{ item.title }}</li>
-                {% empty %}
-                    <li>Your cart is empty.</li>
-                {% endfor %}
-            </ul>
-        </div>
     </div>
 
     <script>
-        // Preview image before uploading
         document.getElementById('uploadPic').addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 var reader = new FileReader();
@@ -203,33 +142,6 @@
                 };
                 reader.readAsDataURL(this.files[0]);
             }
-        });
-
-        // AJAX form submission for profile update
-        document.getElementById('profileForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var formData = new FormData(this);
-            
-            fetch("{% url 'update_profile' %}", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Profile updated successfully!');
-                    // Optionally, update profile info on the page without reloading
-                } else {
-                    alert('Error updating profile. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            });
         });
     </script>
 </body>

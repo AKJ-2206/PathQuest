@@ -9,6 +9,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import ContactMessage
 from django.contrib import messages
+from .forms import ProfileForm
+from .models import Profile
+from .forms import ProfileForm
+
 
 
 def index(request):
@@ -72,3 +76,55 @@ def contact_message(request):
         
     # If not a POST request, redirect to the contact form or another page
     return redirect('index')
+
+def update_profile(request):
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        profile = Profile(user=request.user)
+        profile.save()
+    
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=profile)
+    
+    return render(request, 'User/update_profile.html', {'form': form})
+
+@login_required
+def profile_view(request):
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        profile = None
+    
+    return render(request, 'User/profile.html', {'profile': profile})
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+
+@csrf_exempt
+def update_profile(request):
+    if request.method == 'POST':
+        # Handle form data here
+        # For example:
+        user = request.user
+        if user.is_authenticated:
+            description = request.POST.get('description', '')
+            profile_photo = request.FILES.get('profile_photo', None)
+
+            # Update profile information
+            user.profile.description = description
+            if profile_photo:
+                user.profile.profile_photo = profile_photo
+            user.profile.save()
+
+            return JsonResponse({'success': True})
+
+        return JsonResponse({'success': False, 'error': 'User not authenticated'})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
