@@ -1,5 +1,5 @@
 <!-- search_results.html -->
-<h1>Search Results for "{{ query }}"</h1>
+{% comment %} <h1>Search Results for "{{ query }}"</h1>
 
 {% if course_results or user_results %}
     <h2>Courses</h2>
@@ -25,4 +25,42 @@
     {% endif %}
 {% else %}
     <p>No results found.</p>
-{% endif %}
+{% endif %} {% endcomment %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Add your CSS file here -->
+</head>
+<body>
+    <nav class="main-nav">
+        <a href="index.html" class="logo">PathQuest</a>
+        <!-- Your navigation menu goes here -->
+        <form action="{% url 'search_results' %}" method="GET" class="search-form">
+            <input type="text" name="q" placeholder="Search..." required>
+            <button type="submit">Search</button>
+        </form>
+    </nav>
+    
+    <h1>Search Results for "{{ query }}"</h1>
+    {% if user_results %}
+    {{ user_results.username }}
+    {% endif %}
+
+    {% if results %}
+        <ul>
+            {% for course in results %}
+                <li>
+                    <a href="{% url 'profile_view' course.id %}">{{ course.course_name }}</a> - Price: {{ course.price }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+</body>
+</html>

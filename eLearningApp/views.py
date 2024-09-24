@@ -51,8 +51,6 @@ def user_logout(request):
     logout(request)
     return render(request, 'User/login.html')
 
-def profile_view(request):
-    return render(request, 'User/profile.html', {'user': request.user})
 
 def contact_message(request):
     if request.method == 'POST':
@@ -96,9 +94,9 @@ def update_profile(request):
     return render(request, 'User/update_profile.html', {'form': form})
 
 @login_required
-def profile_view(request):
+def profile_view(request,user_id):
     try:
-        profile = Profile.objects.get(user=request.user)
+        profile = Profile.objects.get(user=user_id)
     except Profile.DoesNotExist:
         profile = None
     
@@ -130,13 +128,6 @@ def update_profile(request):
         return JsonResponse({'success': False, 'error': 'User not authenticated'})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
-def profile_view(request):
-    try:
-        profile = request.user.profile
-    except Profile.DoesNotExist:
-        profile = None
-
-    return render(request, 'User/profile.html', {'profile': profile})
 
 def courses_view(request):
     courses = Course.objects.all()
@@ -145,40 +136,33 @@ def courses_view(request):
     for course in courses:
         course.stars = range(course.rating)
 
-    return render(request, 'index.html', {'courses': courses})
+    return render(request, 'User/index.html', {'courses': courses})
 
 def search_results(request):
     query = request.GET.get('q')  # Get the search term from the user input
     if query:
+        if Course.objects.filter(course_name=query):
         # Search in Course model by title
-        course_results = Course.objects.filter(title__icontains=query)
+            course_results = Course.objects.filter(title__icontains=query)
+        else:
+            course_results = None
 
         # Search in User model by username
-        user_results = User.objects.filter(username__icontains=query)
-    else:
-        course_results = Course.objects.none()  # No results if query is empty
-        user_results = User.objects.none()
+        if User.objects.filter(username=query):
+            user_results = User.objects.get(username=query)
+        else:
+            user_results = None
 
-    context = {
+
+    
+    return render(request, 'User/search_results.html', {
         'query': query,
         'course_results': course_results,
         'user_results': user_results,
-    }
-    
-    return render(request, 'search_results.html', context)
+    })
 
 
 @login_required
 def user_profile(request):
     user = request.user
-    return render(request, 'profile.html', {'user': user})
-
-def search_results(request):
-    query = request.GET.get('q', '')
-    if query:
-        # Adjust this line to use the correct field names
-        results = Course.objects.filter(course_name__icontains=query)
-    else:
-        results = Course.objects.all()  # or any default behavior
-
-    return render(request, 'search_results.html', {'results': results})
+    return render(request, 'User/profile.html', {'user': user})

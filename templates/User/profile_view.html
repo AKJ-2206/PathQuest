@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.username }}'s Profile</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Add your CSS file here -->
+</head>
+<body>
+    <nav class="main-nav">
+        <a href="index.html" class="logo">PathQuest</a>
+        <!-- Your navigation menu goes here -->
+        <form action="{% url 'search_results' %}" method="GET" class="search-form">
+            <input type="text" name="q" placeholder="Search..." required>
+            <button type="submit">Search</button>
+        </form>
+    </nav>
+
+    <h1>{{ user.username }}'s Profile</h1>
+    
+    <h2>Courses Enrolled:</h2>
+    {% if courses %}
+        <ul>
+            {% for course in courses %}
+                <li>{{ course.course_name }} - Price: {{ course.price }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No courses found.</p>
+    {% endif %}
+</body>
+</html>

@@ -72,7 +72,7 @@
                           <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
                           <!-- <li><a href="meetings.html">Meetings</a></li> -->
                           {% if user.is_authenticated %}
-                            <li><a href="{% url 'profile' %}">My Profile</a></li>
+                            <li><a href="{% url 'profile' user_id=user.id  %}">My Profile</a></li>
                             <li><a href="{% url 'user_logout' %}">Logout</a></li> 
                           {% else %}
                             <li><a href="{% url 'user_login' %}">Login</a></li> 
