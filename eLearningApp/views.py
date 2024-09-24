@@ -12,6 +12,7 @@ from django.contrib import messages
 from .forms import ProfileForm
 from .models import Profile
 from .forms import ProfileForm
+from .models import Course
 
 
 
@@ -128,3 +129,56 @@ def update_profile(request):
 
         return JsonResponse({'success': False, 'error': 'User not authenticated'})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+def profile_view(request):
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        profile = None
+
+    return render(request, 'User/profile.html', {'profile': profile})
+
+def courses_view(request):
+    courses = Course.objects.all()
+
+    # Prepare courses data with stars
+    for course in courses:
+        course.stars = range(course.rating)
+
+    return render(request, 'index.html', {'courses': courses})
+
+def search_results(request):
+    query = request.GET.get('q')  # Get the search term from the user input
+    if query:
+        # Search in Course model by title
+        course_results = Course.objects.filter(title__icontains=query)
+
+        # Search in User model by username
+        user_results = User.objects.filter(username__icontains=query)
+    else:
+        course_results = Course.objects.none()  # No results if query is empty
+        user_results = User.objects.none()
+
+    context = {
+        'query': query,
+        'course_results': course_results,
+        'user_results': user_results,
+    }
+    
+    return render(request, 'search_results.html', context)
+
+
+@login_required
+def user_profile(request):
+    user = request.user
+    return render(request, 'profile.html', {'user': user})
+
+def search_results(request):
+    query = request.GET.get('q', '')
+    if query:
+        # Adjust this line to use the correct field names
+        results = Course.objects.filter(course_name__icontains=query)
+    else:
+        results = Course.objects.all()  # or any default behavior
+
+    return render(request, 'search_results.html', {'results': results})

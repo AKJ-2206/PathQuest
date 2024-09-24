@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user.username }}'s Profile</title>
     <style>
+        /* CSS Styles (unchanged) */
         :root {
             --primary-color: #6200EA;
             --secondary-color: #3700B3;
@@ -150,7 +151,7 @@
             <h2>{{ user.username }}</h2>
         </div>
 
-        <form id="profileForm" method="POST" enctype="multipart/form-data">
+        <form id="profileForm" method="POST" enctype="multipart/form-data" action="{% url 'update_profile' %}">
             {% csrf_token %}
             <div class="bio-section">
                 <textarea name="description" placeholder="Write your bio here...">{{ user.profile.description }}</textarea>

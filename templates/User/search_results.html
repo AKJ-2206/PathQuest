@@ -1,0 +1,28 @@
+<!-- search_results.html -->
+<h1>Search Results for "{{ query }}"</h1>
+
+{% if course_results or user_results %}
+    <h2>Courses</h2>
+    {% if course_results %}
+        <ul>
+            {% for course in course_results %}
+                <li>{{ course.title }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No matching courses found.</p>
+    {% endif %}
+
+    <h2>Users</h2>
+    {% if user_results %}
+        <ul>
+            {% for user in user_results %}
+                <li><a href="{% url 'user_profile' user.username %}">{{ user.username }}</a></li>  <!-- Link to user profile -->
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No matching users found.</p>
+    {% endif %}
+{% else %}
+    <p>No results found.</p>
+{% endif %}

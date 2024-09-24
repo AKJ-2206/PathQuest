@@ -20,3 +20,14 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
     
+
+class Course(models.Model):
+    course_name = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    image = models.ImageField(upload_to='courses/')
+    rating = models.IntegerField(default=0)  # or use a different method for ratings
+
+    def __str__(self):
+        return self.course_name
+
+    

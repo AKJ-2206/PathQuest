@@ -10,3 +10,9 @@ class ElearningAppConfig(AppConfig):
 
     def ready(self):
         import eLearningApp.signals
+
+class YourAppConfig(AppConfig):
+    name = 'eLearningApp'
+
+    def ready(self):
+        import eLearningApp.signals
