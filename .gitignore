@@ -22,6 +22,7 @@ db.sqlite3
 cat << EOF >> .gitignore
 # Virtual environment
 myenv/
+venv
 
 # Python byte-compiled files
 __pycache__/
