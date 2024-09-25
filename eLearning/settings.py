@@ -31,9 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-   
-    'material.admin',
-    
+#    'material',
+#     'material.admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'eLearningApp',
-     'rest_framework',
+    #  'rest_framework',
 ]
 
 MIDDLEWARE = [
