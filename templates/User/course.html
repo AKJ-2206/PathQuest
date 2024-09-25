@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ course.title }}</title>
+    <style>
+        :root {
+            --primary-color: #6200EA;
+            --secondary-color: #3700B3;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+        .course-container {
+            max-width: 900px;
+            margin: auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .course-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .course-title {
+            font-size: 36px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .instructor {
+            font-size: 18px;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+
+        .course-description {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .enroll-btn {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .enroll-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .like-btn {
+            padding: 8px 16px;
+            background-color: #FF4081;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .like-btn:hover {
+            background-color: #F50057;
+        }
+
+        .back-to-courses {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .back-to-courses:hover {
+            text-decoration: underline;
+        }
+
+        .course-image {
+            width: 100%;
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        .course-meta {
+            font-size: 16px;
+            color: #777;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="course-container">
+        <div class="course-header">
+            <h1 class="course-title">{{ course.title }}</h1>
+            <p class="instructor">Instructor: <a href="{% url 'user_profile' course.instructor.username %}">{{ course.instructor.username }}</a></p>
+            <p class="course-meta">Category: {{ course.category }} | Duration: {{ course.duration }} hours | Enrolled: {{ course.enroll_count }} students</p>
+            <img src="{{ course.image.url }}" alt="{{ course.title }}" class="course-image" onerror="this.src='{% static 'images/default_course.png' %}';">
+        </div>
+
+        <div class="course-description">
+            <p>{{ course.description }}</p>
+        </div>
+
+        <div class="actions">
+            <!-- Enroll Button -->
+            <form method="POST" action="{% url 'enroll_course' course.id %}">
+                {% csrf_token %}
+                <button type="submit" class="enroll-btn">Enroll Now</button>
+            </form>
+
+            <!-- Like Button -->
+            <form method="POST" action="{% url 'like_course' course.id %}">
+                {% csrf_token %}
+                <button type="submit" class="like-btn">
+                    {% if course in user.profile.liked_courses.all %}
+                        Unlike Course
+                    {% else %}
+                        Like Course
+                    {% endif %}
+                </button>
+            </form>
+        </div>
+
+        <div class="back-link">
+            <a href="{% url 'course_list' %}" class="back-to-courses">← Back to Courses</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,31 +1,3 @@
-<!-- search_results.html -->
-{% comment %} <h1>Search Results for "{{ query }}"</h1>
-
-{% if course_results or user_results %}
-    <h2>Courses</h2>
-    {% if course_results %}
-        <ul>
-            {% for course in course_results %}
-                <li>{{ course.title }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No matching courses found.</p>
-    {% endif %}
-
-    <h2>Users</h2>
-    {% if user_results %}
-        <ul>
-            {% for user in user_results %}
-                <li><a href="{% url 'user_profile' user.username %}">{{ user.username }}</a></li>  <!-- Link to user profile -->
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No matching users found.</p>
-    {% endif %}
-{% else %}
-    <p>No results found.</p>
-{% endif %} {% endcomment %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -45,22 +17,37 @@
             <button type="submit">Search</button>
         </form>
     </nav>
-    
+
     <h1>Search Results for "{{ query }}"</h1>
+
+    <!-- Displaying User Results -->
     {% if user_results %}
-    {{ user_results.username }}
+        <h2>Users</h2>
+        <ul>
+            {% for user in user_results %}
+                <li><a href="{% url 'user_profile' user.username %}">{{ user.username }}</a></li>
+            {% empty %}
+                <li>No matching users found.</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No users found.</p>
     {% endif %}
 
+    <!-- Displaying Course Results -->
     {% if results %}
+        <h2>Courses</h2>
         <ul>
             {% for course in results %}
                 <li>
                     <a href="{% url 'profile_view' course.id %}">{{ course.course_name }}</a> - Price: {{ course.price }}
                 </li>
+            {% empty %}
+                <li>No matching courses found.</li>
             {% endfor %}
         </ul>
     {% else %}
-        <p>No results found.</p>
+        <p>No courses found.</p>
     {% endif %}
 </body>
 </html>

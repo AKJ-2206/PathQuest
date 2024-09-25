@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User 
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
@@ -139,19 +139,15 @@ def courses_view(request):
     return render(request, 'User/index.html', {'courses': courses})
 
 def search_results(request):
-    query = request.GET.get('q')  # Get the search term from the user input
-    if query:
-        if Course.objects.filter(course_name=query):
-        # Search in Course model by title
-            course_results = Course.objects.filter(title__icontains=query)
-        else:
-            course_results = None
+    query = request.GET.get('q', '')
+    user_results = User.objects.filter(username__icontains=query)  # QuerySet of users
+    course_results = Course.objects.filter(title__icontains=query)  # Adjust this as per your model
 
-        # Search in User model by username
-        if User.objects.filter(username=query):
-            user_results = User.objects.get(username=query)
-        else:
-            user_results = None
+    return render(request, 'search_results.html', {
+        'query': query,
+        'user_results': user_results,  # This should be a queryset
+        'results': course_results,      # Assuming results is for courses
+    })
 
 
     
@@ -166,3 +162,16 @@ def search_results(request):
 def user_profile(request):
     user = request.user
     return render(request, 'User/profile.html', {'user': user})
+
+def user_profile_view(request, user_id):
+    user = get_object_or_404(User, id=user_id)  # Fetch the user by ID
+    return render(request, 'user_profile.html', {'user': user})
+
+
+def course_list(request):
+    courses = Course.objects.all()
+    return render(request, 'course_list.html', {'courses': courses})
+
+def course_detail(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    return render(request, 'course_detail.html', {'course': course})

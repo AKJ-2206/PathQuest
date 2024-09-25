@@ -79,6 +79,17 @@
                           {% endif %}
                           <li class="scroll-to-section"><a href="#apply">Apply Now</a></li>
                           <li class="scroll-to-section"><a href="#courses">Courses</a></li> 
+                          {% comment %} <li class="scroll-to-section"><a href="{% url 'course_detail' course.id %}">Courses</a></li>
+                          <ul>
+    {% for course in courses %}
+        <li class="scroll-to-section">
+            <a href="{% url 'course_detail' course.id %}">{{ course.title }}</a>
+        </li>
+    {% endfor %}
+</ul> {% endcomment %} 
+{% comment %} <li><a href="{% url 'course_details' %}">Courses</a></li>
+ {% endcomment %}
+
                           <li class="has-sub">
                               <a href="javascript:void(0)">Pages</a>
                               <ul class="sub-menu">
