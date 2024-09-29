@@ -30,9 +30,9 @@ body::before {
   width: 400px;
   border-radius: 8px;
   padding: 30px;
-  text-align: center;
+  text-align: center; 
   border: 1px solid rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(9px);
+  backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(9px);
 }
 

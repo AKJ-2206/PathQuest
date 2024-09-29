@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user.username }}'s Profile</title>
     <style>
-        /* CSS Styles (unchanged) */
         :root {
             --primary-color: #6200EA;
             --secondary-color: #3700B3;
@@ -31,9 +30,9 @@
         .profile-header {
             text-align: center;
             margin-bottom: 30px;
+            position: relative;
         }
         .profile-pic-wrapper {
-            position: relative;
             width: 150px;
             height: 150px;
             margin: 0 auto 20px;
@@ -46,57 +45,27 @@
             border: 3px solid var(--primary-color);
             background-color: #e0e0e0;
         }
-        .change-pic-overlay {
+        .edit-btn {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            cursor: pointer;
-        }
-        .change-pic-overlay:hover {
-            opacity: 1;
-        }
-        .change-pic-text {
-            color: white;
-            font-size: 14px;
-        }
-        .bio-section {
-            margin-bottom: 30px;
-        }
-        .bio-section textarea {
-            width: 100%;
-            height: 100px;
-            padding: 10px;
-            border: 2px solid var(--primary-color);
-            border-radius: 8px;
-            font-size: 16px;
-            resize: vertical;
-            margin-bottom: 10px;
-        }
-        .bio-section textarea:focus {
-            outline: none;
-            border-color: var(--secondary-color);
-        }
-        .submit-btn {
-            padding: 10px 20px;
+            top: 10px;
+            right: 10px;
+            padding: 8px 16px;
             background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             transition: background-color 0.3s ease;
         }
-        .submit-btn:hover {
+        .edit-btn:hover {
             background-color: var(--secondary-color);
+        }
+        .bio-section {
+            margin-bottom: 30px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
         }
         .section-title {
             font-size: 24px;
@@ -132,33 +101,24 @@
             <div class="profile-pic-wrapper">
                 {% if user.profile.profile_photo %}
                     <img src="{{ user.profile.profile_photo.url }}" 
-                         id="profilePic" 
                          alt="Profile Picture" 
                          class="profile-pic"
                          onerror="this.src='{% static 'images/default_profile.png' %}';">
                 {% else %}
                     <img src="{% static 'images/default_profile.png' %}" 
-                         id="profilePic" 
                          alt="Profile Picture" 
                          class="profile-pic"
                          onerror="this.src='{% static 'images/default_profile.png' %}';">
                 {% endif %}
-                <label for="uploadPic" class="change-pic-overlay">
-                    <span class="change-pic-text">Change Picture</span>
-                </label>
-                <input type="file" id="uploadPic" name="profile_photo" accept="image/*" style="display: none;">
             </div>
             <h2>{{ user.username }}</h2>
+            <a href="{% url 'edit_profile' %}" class="edit-btn">Edit Profile</a>
         </div>
 
-        <form id="profileForm" method="POST" enctype="multipart/form-data" action="{% url 'update_profile' %}">
-            {% csrf_token %}
-            <div class="bio-section">
-                <textarea name="description" placeholder="Write your bio here...">{{ user.profile.description }}</textarea>
-            </div>
-            <!-- Update Profile Button -->
-            <button type="submit" class="submit-btn">Update Profile</button>
-        </form>
+        <div class="bio-section">
+            <h3>About Me</h3>
+            <p>{{ user.profile.description|default:"No description available." }}</p>
+        </div>
 
         <h2 class="section-title">Courses Bought</h2>
         <div class="courses-list">
@@ -193,45 +153,5 @@
             </ul>
         </div>
     </div>
-
-    <script>
-        // Preview image before uploading
-        document.getElementById('uploadPic').addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('profilePic').src = e.target.result;
-                };
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
-
-        // AJAX form submission for profile update
-        document.getElementById('profileForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var formData = new FormData(this);
-            
-            fetch("{% url 'update_profile' %}", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Profile updated successfully!');
-                    // Optionally, update profile info on the page without reloading
-                } else {
-                    alert('Error updating profile. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            });
-        });
-    </script>
 </body>
 </html>
