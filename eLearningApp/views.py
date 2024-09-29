@@ -106,6 +106,10 @@ def profile_view(request,user_id):
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
+  
+@login_required
+def edit_profile(request):
+    return render(request, 'User/edit_profile.html', {'user': request.user})
 
 @csrf_exempt
 def update_profile(request):
