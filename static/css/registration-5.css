@@ -1,0 +1,168 @@
+/* General body styling */
+body {
+    background-color: #7a5c99; /* Decent purple background */
+    font-family: Arial, sans-serif;
+}
+
+/* Card container for the registration form */
+.card {
+    border-radius: 0.75rem;
+    background-color: rgba(255, 255, 255, 0.1); /* Transparent background */
+    backdrop-filter: blur(10px); /* Blurring for glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Light border for card */
+}
+
+/* Primary section background on the left side of the form */
+.text-bg-primary {
+    background-color: #8e44ad; /* Primary purple */
+    color: #fff;
+    padding: 2rem;
+    border-top-left-radius: 0.75rem;
+    border-bottom-left-radius: 0.75rem;
+}
+
+/* Logo image styling */
+img {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Headings and text styling */
+h2 {
+    color: #ffffff; /* Light text color */
+    font-weight: bold;
+    text-align: center;
+}
+
+h3 {
+    color: #d3cce3; /* Light purple shade */
+    font-weight: normal;
+    text-align: center;
+}
+
+/* Styling for form labels */
+.form-label {
+    font-weight: 500;
+    font-size: 1rem;
+    color: #e6d8f0;
+}
+
+/* Form input and select elements */
+input[type="text"], input[type="email"], input[type="password"], select {
+    border-radius: 0.25rem;
+    border: 1px solid #e6d8f0;
+    padding: 0.75rem;
+    width: 100%;
+    font-size: 1rem;
+    box-shadow: none;
+    background-color: rgba(255, 255, 255, 0.2); /* Slight transparency for inputs */
+    color: #ffffff;
+}
+
+input:focus, select:focus {
+    border-color: #8e44ad;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(142, 68, 173, .25);
+}
+
+/* Form button styling */
+button[type="submit"] {
+    background-color: #8e44ad;
+    color: #fff;
+    font-size: 1.25rem;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    border: none;
+}
+
+button[type="submit"]:hover {
+    background-color: #6c3483;
+}
+
+/* Styling for the terms checkbox */
+.form-check-input:checked {
+    background-color: #8e44ad;
+    border-color: #8e44ad;
+}
+
+/* Social buttons */
+.btn-outline-primary {
+    border-radius: 0.25rem;
+    padding: 0.75rem;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-color: #8e44ad;
+    color: #8e44ad;
+}
+
+.btn-outline-primary:hover {
+    background-color: #8e44ad;
+    color: #fff;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+    .text-bg-primary {
+        border-radius: 0;
+    }
+
+    .card {
+        border-radius: 0;
+    }
+
+    .col-10, .col-xl-8 {
+        text-align: center;
+    }
+}
+
+/* Margin and padding tweaks */
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.mb-5 {
+    margin-bottom: 3rem !important;
+}
+
+.pt-5 {
+    padding-top: 3rem !important;
+}
+
+/* Styling for links inside form (terms and login) */
+a.link-primary {
+    color: #8e44ad;
+}
+
+a.link-primary:hover {
+    color: #6c3483;
+    text-decoration: underline;
+}
+
+/* Horizontal rule styling */
+hr {
+    border-color: rgba(142, 68, 173, 0.1); /* Light purple border */
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Footer styling for "Already have an account" section */
+.text-secondary {
+    color: #d3cce3 !important;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+/* For small screens, ensure a neat look */
+@media (max-width: 576px) {
+    .btn-outline-primary {
+        margin-bottom: 1rem;
+    }
+}
