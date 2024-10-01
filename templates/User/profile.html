@@ -2,6 +2,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="TemplateMo">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="icon" href="{% static 'images/logo.jpg' %}" type="image/x-icon">
+    <title>PathQuest.in</title>
+
+    
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+
+   
+    <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/templatemo-edu-meeting.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.css' %}">
+    <link rel="stylesheet" href="{% static 'css/lightbox.css' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user.username }}'s Profile</title>
@@ -45,7 +62,7 @@
             border: 3px solid var(--primary-color);
             background-color: #e0e0e0;
         }
-        .edit-btn, .upload-btn {
+        .edit-btn, .upload-btn, .view-course-btn {
             padding: 8px 16px;
             background-color: var(--primary-color);
             color: white;
@@ -54,13 +71,15 @@
             cursor: pointer;
             font-size: 14px;
             transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
         .edit-btn {
             position: absolute;
             top: 10px;
             right: 10px;
         }
-        .edit-btn:hover, .upload-btn:hover {
+        .edit-btn:hover, .upload-btn:hover, .view-course-btn:hover {
             background-color: var(--secondary-color);
         }
         .bio-section {
@@ -90,6 +109,9 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             transition: transform 0.2s ease-in-out;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .courses-list li:hover, .liked-courses li:hover, .cart-items li:hover, .uploaded-courses li:hover {
             transform: translateY(-3px);
@@ -99,9 +121,50 @@
             margin-top: 30px;
             text-align: center;
         }
+        .upload-course-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .upload-course-btn:hover {
+            background-color: var(--secondary-color);
+        }
     </style>
 </head>
 <body>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <nav class="main-nav" style="background: rgba(0, 0, 0, 0.7); padding: 10px 0;">
+                <!-- ***** Logo Start ***** -->
+                
+                <form action="{% url 'search_results' %}" method="GET" class="search-form" style="display: inline-block; margin-left: 20px;">
+                    <input type="text" name="q" placeholder="Search..." required style="padding: 5px;">
+                    <button type="submit" style="padding: 5px;">Search</button>
+                </form>
+                <!-- ***** Logo End ***** -->
+                <!-- ***** Menu Start ***** -->
+                <ul class="nav" style="list-style: none; display: inline-block; margin: 0; padding: 0;">
+                    <li style="display: inline; margin-right: 20px;"><a href="{% url 'index' %}" style="color: white; text-decoration: none;">Home</a></li>
+                    {% if user.is_authenticated %}
+                        
+                        <li style="display: inline;"><a href="{% url 'user_logout' %}" style="color: white; text-decoration: none;">Logout</a></li>
+                    {% else %}
+                        <li style="display: inline;"><a href="{% url 'user_login' %}" style="color: white; text-decoration: none;">Login</a></li>
+                    {% endif %}
+                </ul>
+                
+            </nav>
+        </div>
+    </div>
+</div>
+
+         
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-pic-wrapper">
@@ -152,7 +215,10 @@
         <div class="uploaded-courses">
             <ul>
                 {% for course in uploaded_courses %}
-                    <li>{{ course.title }}</li>
+                    <li>
+                        {{ course.title }}
+                        <a href="{% url 'course_detail' course.id %}" class="view-course-btn">View Course</a>
+                    </li>
                 {% empty %}
                     <li>No uploaded courses yet.</li>
                 {% endfor %}
@@ -160,7 +226,7 @@
         </div>
 
         <div class="upload-section">
-            <a href="{% url 'upload_course' %}" class="upload-btn">Upload New Course</a>
+            <a href="{% url 'upload_course' %}" class="upload-course-btn">Upload New Course</a>
         </div>
 
         <h2 class="section-title">Cart</h2>
@@ -175,14 +241,36 @@
         </div>
     </div>
 </body>
-</html> {% endcomment %}
+</html> 
 
-{% load static %}
+
+
+
+
+
+
+ {% endcomment %}
+
+
+
+ {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="TemplateMo">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="icon" href="{% static 'images/logo.jpg' %}" type="image/x-icon">
+    <title>PathQuest.in</title>
+
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/templatemo-edu-meeting.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.css' %}">
+    <link rel="stylesheet" href="{% static 'css/lightbox.css' %}">
+    
     <title>{{ user.username }}'s Profile</title>
     <style>
         :root {
@@ -193,18 +281,20 @@
         }
         body {
             font-family: 'Arial', sans-serif;
-            background-color: var(--background-color);
             margin: 0;
-            padding: 20px;
+            padding: 0;
             color: var(--text-color);
+            background: url('{% static "images/online_learning_bg.jpg" %}') no-repeat center center fixed;
+            background-size: cover;
         }
         .profile-container {
             max-width: 800px;
-            margin: auto;
-            background: #ffffff;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.8); /* Translucent white background */
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px); /* Glassmorphism effect */
         }
         .profile-header {
             text-align: center;
@@ -224,7 +314,7 @@
             border: 3px solid var(--primary-color);
             background-color: #e0e0e0;
         }
-        .edit-btn, .upload-btn {
+        .edit-btn, .upload-btn, .view-course-btn {
             padding: 8px 16px;
             background-color: var(--primary-color);
             color: white;
@@ -233,18 +323,20 @@
             cursor: pointer;
             font-size: 14px;
             transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
         .edit-btn {
             position: absolute;
             top: 10px;
             right: 10px;
         }
-        .edit-btn:hover, .upload-btn:hover {
+        .edit-btn:hover, .upload-btn:hover, .view-course-btn:hover {
             background-color: var(--secondary-color);
         }
         .bio-section {
             margin-bottom: 30px;
-            background-color: #f0f0f0;
+            background-color: rgba(240, 240, 240, 0.9); /* More translucent */
             padding: 20px;
             border-radius: 8px;
         }
@@ -263,12 +355,15 @@
             padding: 0;
         }
         .courses-list li, .liked-courses li, .cart-items li, .uploaded-courses li {
-            background: #f0f0f0;
+            background: rgba(240, 240, 240, 0.9); /* Slightly translucent background */
             margin-bottom: 10px;
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             transition: transform 0.2s ease-in-out;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .courses-list li:hover, .liked-courses li:hover, .cart-items li:hover, .uploaded-courses li:hover {
             transform: translateY(-3px);
@@ -278,9 +373,43 @@
             margin-top: 30px;
             text-align: center;
         }
+        .upload-course-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .upload-course-btn:hover {
+            background-color: var(--secondary-color);
+        }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav" style="background: rgba(0, 0, 0, 0.7); padding: 10px 0;">
+                    <form action="{% url 'search_results' %}" method="GET" class="search-form" style="display: inline-block; margin-left: 20px;">
+                        <input type="text" name="q" placeholder="Search..." required style="padding: 5px;">
+                        <button type="submit" style="padding: 5px;">Search</button>
+                    </form>
+                    <ul class="nav" style="list-style: none; display: inline-block; margin: 0; padding: 0;">
+                        <li style="display: inline; margin-right: 20px;"><a href="{% url 'index' %}" style="color: white; text-decoration: none;">Home</a></li>
+                        {% if user.is_authenticated %}
+                            <li style="display: inline;"><a href="{% url 'user_logout' %}" style="color: white; text-decoration: none;">Logout</a></li>
+                        {% else %}
+                            <li style="display: inline;"><a href="{% url 'user_login' %}" style="color: white; text-decoration: none;">Login</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-pic-wrapper">
@@ -331,27 +460,21 @@
         <div class="uploaded-courses">
             <ul>
                 {% for course in uploaded_courses %}
-                    <li>{{ course.title }}</li>
+                    <li>
+                        {{ course.title }}
+                        <a href="#" class="view-course-btn">View</a>
+                    </li>
                 {% empty %}
-                    <li>No uploaded courses yet.</li>
+                    <li>No courses uploaded.</li>
                 {% endfor %}
             </ul>
         </div>
 
         <div class="upload-section">
-            <a href="{% url 'upload_course' %}" class="upload-btn">Upload New Course</a>
-        </div>
-
-        <h2 class="section-title">Cart</h2>
-        <div class="cart-items">
-            <ul>
-                {% for item in user.profile.cart_items.all %}
-                    <li>{{ item.title }}</li>
-                {% empty %}
-                    <li>Your cart is empty.</li>
-                {% endfor %}
-            </ul>
+            <h2>Upload Your Courses</h2>
+            <a href="{% url 'upload_course' %}" class="upload-course-btn">Upload Course</a>
         </div>
     </div>
+
 </body>
 </html>

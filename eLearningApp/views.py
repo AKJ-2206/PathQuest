@@ -163,7 +163,7 @@ def search_results(request):
     user_results = User.objects.filter(username__icontains=query)  # QuerySet of users
     course_results = Course.objects.filter(title__icontains=query)  # Adjust this as per your model
 
-    return render(request, 'search_results.html', {
+    return render(request, 'User/search_results.html', {
         'query': query,
         'user_results': user_results,  # This should be a queryset
         'results': course_results,      # Assuming results is for courses
@@ -210,3 +210,6 @@ def upload_course(request):
 
    
     return render(request, 'User/upload_course.html', {'form': form})
+
+
+# 

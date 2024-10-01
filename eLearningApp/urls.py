@@ -19,7 +19,8 @@ urlpatterns = [
     path('update_profile/', update_profile, name='update_profile'),
     # path('profile/', profile_view, name='profile'),
     path('courses/', views.courses_view, name='courses'),
-    path('search/', views.search_results, name='search_results'),
+    # path('search/', views.search_results, name='search_results'),
+    path('search/', search_results, name='search_results'),
      path('user/<str:username>/', views.user_profile, name='user_profile'), 
       path('profile/<int:user_id>/', profile_view, name='profile'),
     path('search/', search_results, name='search_results'),  # Add search results URL
@@ -29,5 +30,5 @@ urlpatterns = [
      path('courses/', views.course_list, name='course_list'),
     path('courses/<int:course_id>/', views.course_detail, name='course_detail'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
-    path('upload-course/', views.upload_course, name='upload_course'),
+    path('upload_course/', views.upload_course, name='upload_course'),
 ]

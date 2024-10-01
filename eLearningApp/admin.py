@@ -56,3 +56,6 @@ class CourseAdmin(admin.ModelAdmin):
         if obj:  # editing an existing object
             return self.readonly_fields + ('created_at',)
         return self.readonly_fields
+    
+
+

@@ -16,14 +16,21 @@ class ProfileForm(forms.ModelForm):
 #         fields = ['title', 'description', 'price', 'category', 'course_image', 'course_file']
 
 
+# class CourseUploadForm(forms.ModelForm):
+#     class Meta:
+#         model = Course
+#         fields = ['title', 'description', 'price', 'category', 'course_image', 'course_file']
+#         widgets = {
+#             'description': forms.Textarea(attrs={'rows': 4}),
+#         }
+#         help_texts = {
+#             'course_image': 'Upload an image for your course (optional)',
+#             'course_file': 'Upload your course content file (optional)',
+        # }
+
+from .models import Course
+
 class CourseUploadForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['title', 'description', 'price', 'category', 'course_image', 'course_file']
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': 4}),
-        }
-        help_texts = {
-            'course_image': 'Upload an image for your course (optional)',
-            'course_file': 'Upload your course content file (optional)',
-        }
+        fields = ['title', 'description', 'price', 'image']
