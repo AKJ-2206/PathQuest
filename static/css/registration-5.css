@@ -1,13 +1,13 @@
 /* General body styling */
 body {
-    background-color: #7a5c99; /* Decent purple background */
+    background-color: azure; /* Decent purple background */
     font-family: Arial, sans-serif;
 }
 
 /* Card container for the registration form */
 .card {
     border-radius: 0.75rem;
-    background-color: rgba(255, 255, 255, 0.1); /* Transparent background */
+    background-color: rgba(30, 18, 42, 0.1); /* Transparent background */
     backdrop-filter: blur(10px); /* Blurring for glass effect */
     border: 1px solid rgba(255, 255, 255, 0.2); /* Light border for card */
 }
@@ -44,7 +44,7 @@ h3 {
 .form-label {
     font-weight: 500;
     font-size: 1rem;
-    color: #e6d8f0;
+    color: rgba(0, 0, 0, 0.333);
 }
 
 /* Form input and select elements */
@@ -151,7 +151,7 @@ hr {
 
 /* Footer styling for "Already have an account" section */
 .text-secondary {
-    color: #d3cce3 !important;
+    color: rgba(0, 0, 0, 0.333) !important;
     font-size: 0.875rem;
     text-align: center;
 }
