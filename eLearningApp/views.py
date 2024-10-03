@@ -13,6 +13,7 @@ from .forms import ProfileForm
 from .models import Profile
 from .forms import ProfileForm
 from .models import Course
+from .forms import CourseUploadForm
 
 
 
@@ -102,6 +103,21 @@ def profile_view(request,user_id):
     
     return render(request, 'User/profile.html', {'profile': profile})
 
+# @login_required
+# def profile_view(request, user_id):
+#     # Get the user's profile; if not found, return a 404
+#     profile = get_object_or_404(Profile, user__id=user_id)
+
+#     # Get uploaded courses by the user
+#     uploaded_courses = Course.objects.filter(uploaded_by=request.user)
+
+#     # Pass the profile and uploaded courses to the template
+#     return render(request, 'User/profile.html', {
+#         'profile': profile,
+#         'uploaded_courses': uploaded_courses,
+#         'user': request.user
+#     })
+
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -147,7 +163,7 @@ def search_results(request):
     user_results = User.objects.filter(username__icontains=query)  # QuerySet of users
     course_results = Course.objects.filter(title__icontains=query)  # Adjust this as per your model
 
-    return render(request, 'search_results.html', {
+    return render(request, 'User/search_results.html', {
         'query': query,
         'user_results': user_results,  # This should be a queryset
         'results': course_results,      # Assuming results is for courses
@@ -182,4 +198,19 @@ def course_detail(request, course_id):
 
 def meeting_details(request):
     return render(request, 'User\meeting-details.html')
+
+@login_required
+def upload_course(request):
+    if request.method == 'POST':
+        form = CourseUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            course = form.save(commit=False)
+            course.instructor = request.user  
+            course.save()  
+            return redirect('profile')  
+    else:
+        form = CourseUploadForm()  
+
+   
+    return render(request, 'User/upload_course.html', {'form': form})
 

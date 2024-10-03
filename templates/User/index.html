@@ -57,41 +57,41 @@
 
   <!-- ***** Header Area Start ***** -->
   <header class="header-area header-sticky">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <nav class="main-nav">
-            <!-- ***** Logo Start ***** -->
-            <a href="index.html" class="logo">
-              PathQuest
-            </a>
-            <form action="{% url 'search_results' %}" method="GET" class="search-form">
-              <input type="text" name="q" placeholder="Search..." required>
-              <button type="submit">Search</button>
-            </form>
-            <!-- ***** Logo End ***** -->
-            <!-- ***** Menu Start ***** -->
-            <ul class="nav">
-              <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
-              <!-- <li><a href="meetings.html">Meetings</a></li> -->
-              {% if user.is_authenticated %}
-              <li><a href="{% url 'profile' user_id=user.id  %}">My Profile</a></li>
-              <li><a href="{% url 'user_logout' %}">Logout</a></li>
-              {% else %}
-              <li><a href="{% url 'user_login' %}">Login</a></li>
-              {% endif %}
-              <li class="scroll-to-section"><a href="#apply">Apply Now</a></li>
-              <li class="scroll-to-section"><a href="#courses">Courses</a></li>
-              {% comment %} <li class="scroll-to-section"><a href="{% url 'course_detail' course.id %}">Courses</a></li>
-              <ul>
-                {% for course in courses %}
-                <li class="scroll-to-section">
-                  <a href="{% url 'course_detail' course.id %}">{{ course.title }}</a>
-                </li>
-                {% endfor %}
-              </ul> {% endcomment %}
-              {% comment %} <li><a href="{% url 'course_details' %}">Courses</a></li>
-              {% endcomment %}
+      <div class="container">
+          <div class="row">
+              <div class="col-12">
+                  <nav class="main-nav">
+                      <!-- ***** Logo Start ***** -->
+                      <a href="index.html" class="logo">
+                          PathQuest
+                      </a>
+                      <form action="{% url 'search_results' %}" method="GET" class="search-form">
+        <input type="text" name="q" placeholder="Search..." required>
+        <button type="submit">Search</button>
+    </form>
+                      <!-- ***** Logo End ***** -->
+                      <!-- ***** Menu Start ***** -->
+                      <ul class="nav">
+                          <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
+                          <!-- <li><a href="meetings.html">Meetings</a></li> -->
+                          {% if user.is_authenticated %}
+                            <li><a href="{% url 'profile' user_id=user.id  %}">My Profile</a></li>
+                            <li><a href="{% url 'user_logout' %}">Logout</a></li> 
+                          {% else %}
+                            <li><a href="{% url 'user_login' %}">Login</a></li> 
+                          {% endif %}
+                          <li class="scroll-to-section"><a href="#apply">Apply Now</a></li>
+                          <li class="scroll-to-section"><a href="#courses">Courses</a></li> 
+                          {% comment %} <li class="scroll-to-section"><a href="{% url 'course_detail' course.id %}">Courses</a></li>
+                          <ul>
+    {% for course in courses %}
+        <li class="scroll-to-section">
+            <a href="{% url 'course_detail' course.id %}">{{ course.title }}</a>
+        </li>
+    {% endfor %}
+</ul> {% endcomment %} 
+{% comment %} <li><a href="{% url 'course_details' %}">Courses</a></li>
+ {% endcomment %}
 
               <li class="has-sub">
                 <a href="javascript:void(0)">Pages</a>
