@@ -7,10 +7,10 @@
     <title>{{ user.username }}'s Profile</title>
     <style>
         :root {
-            --primary-color: #6200EA;
+            --primary-color: rgb(9, 9, 163);
             --secondary-color: #3700B3;
-            --background-color: #f5f5f5;
-            --text-color: #333;
+            --background-color: rgba(148, 115, 213, 0.333);
+            --text-color: black;
         }
         body {
             font-family: 'Arial', sans-serif;
@@ -22,7 +22,7 @@
         .profile-container {
             max-width: 800px;
             margin: auto;
-            background: #ffffff;
+            background: white;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -63,7 +63,7 @@
         }
         .bio-section {
             margin-bottom: 30px;
-            background-color: #f0f0f0;
+            background-color: azure;
             padding: 20px;
             border-radius: 8px;
         }
@@ -82,7 +82,7 @@
             padding: 0;
         }
         .courses-list li, .liked-courses li, .cart-items li {
-            background: #f0f0f0;
+            background: azure;
             margin-bottom: 10px;
             padding: 15px;
             border-radius: 8px;
@@ -116,11 +116,11 @@
         </div>
 
         <div class="bio-section">
-            <h3>About Me</h3>
+            <h3>Public Profile</h3>
             <p>{{ user.profile.description|default:"No description available." }}</p>
         </div>
 
-        <h2 class="section-title">Courses Bought</h2>
+        <h2 class="section-title">My Learning</h2>
         <div class="courses-list">
             <ul>
                 {% for course in user.profile.courses_bought.all %}
@@ -131,13 +131,13 @@
             </ul>
         </div>
 
-        <h2 class="section-title">Liked Courses</h2>
+        <h2 class="section-title">Wishlist</h2>
         <div class="liked-courses">
             <ul>
                 {% for course in user.profile.liked_courses.all %}
                     <li>{{ course.title }}</li>
                 {% empty %}
-                    <li>No liked courses yet.</li>
+                    <li>Your wishlist is empty.</li>
                 {% endfor %}
             </ul>
         </div>
