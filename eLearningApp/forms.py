@@ -30,7 +30,7 @@ class ProfileForm(forms.ModelForm):
 
 from .models import Course
 
-class CourseUploadForm(forms.ModelForm):
+class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['title', 'description', 'price', 'image']
+        fields = ['title', 'description', 'price','cover_image','content_upload']

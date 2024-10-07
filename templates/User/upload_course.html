@@ -1,4 +1,4 @@
-
+{% comment %} 
 
 {% load static %}
 <!DOCTYPE html>
@@ -132,83 +132,228 @@
 </html> 
 
 
+ {% endcomment %}
 
-{% comment %} {% load static %}
+
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Upload Course Page">
-    <meta name="author" content="TemplateMo">
-    <link rel="icon" href="{% static 'images/logo.jpg' %}" type="image/x-icon">
-    <title>Upload Course</title>
-
-    <!-- Bootstrap CSS -->
-    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
-    <link rel="stylesheet" href="{% static 'css/templatemo-edu-meeting.css' %}">
-    <link rel="stylesheet" href="{% static 'css/owl.css' %}">
-    <link rel="stylesheet" href="{% static 'css/lightbox.css' %}">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload New Course</title>
     <style>
-        .container {
-            margin-top: 100px;
+        :root {
+            --primary-color: #6200EA;
+            --secondary-color: #3700B3;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
         }
-        .upload-form-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 30px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+            line-height: 1.6;
         }
-        .upload-btn {
-            background-color: #6200EA;
+        .upload-container {
+            max-width: 800px;
+            margin: auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        form {
+            display: grid;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        .file-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .file-input-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .file-input-label:hover {
+            background-color: #e8e8e8;
+        }
+        .file-input-label i {
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        #coverImagePreview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+        button[type="submit"] {
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 16px;
+            padding: 15px 25px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            width: 100%;
         }
-        .upload-btn:hover {
-            background-color: #3700B3;
+        button[type="submit"]:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
         }
-        .form-group label {
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: var(--primary-color);
+            text-decoration: none;
             font-weight: bold;
         }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: #d32f2f;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .help-text {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <div class="upload-form-container">
-            <h2>Upload a New Course</h2>
-            <form action="{% url 'upload_course' %}" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                
-                <div class="form-group">
-                    <label for="title">Course Title</label>
-                    <input type="text" class="form-control" id="title" name="title" required>
-                </div>
+    <div class="upload-container">
+        <h1>Upload New Course</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_title">Title:</label>
+                <input type="text" id="id_title" name="title" required>
+            </div>
 
-                <div class="form-group">
-                    <label for="description">Course Description</label>
-                    <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
-                </div>
+            <div class="form-group">
+                <label for="id_description">Description:</label>
+                <textarea id="id_description" name="description" required></textarea>
+            </div>
 
-                <div class="form-group">
-                    <label for="course_file">Upload Course File</label>
-                    <input type="file" class="form-control-file" id="course_file" name="course_file" required>
-                </div>
+            <div class="form-group">
+                <label for="id_price">Price:</label>
+                <input type="number" id="id_price" name="price" step="0.01" min="0" required>
+            </div>
 
-                <button type="submit" class="upload-btn">Upload Course</button>
-            </form>
-        </div>
+            <div class="form-group">
+                <label for="id_instructor_name">Instructor Name:</label>
+                <input type="text" id="id_instructor_name" name="instructor_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="id_cover_image">Cover Image:</label>
+                <div class="file-input-group">
+                    <label for="id_cover_image" class="file-input-label">
+                        <i class="fas fa-image"></i>
+                        <span>Choose Cover Image</span>
+                    </label>
+                    <input type="file" id="id_cover_image" name="cover_image" accept="image/*" required>
+                    <img id="coverImagePreview" src="#" alt="Cover Image Preview">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_content_upload">Content Upload:</label>
+                <div class="file-input-group">
+                    <label for="id_content_upload" class="file-input-label">
+                        <i class="fas fa-file-archive"></i>
+                        <span>Choose Content File (ZIP)</span>
+                    </label>
+                    <input type="file" id="id_content_upload" name="content_upload" accept=".zip" required>
+                </div>
+            </div>
+            
+            <button type="submit">Upload Course</button>
+        </form>
+        <a href="{% url 'profile' user_id=request.user.id %}" class="back-link">Back to Profile</a>
     </div>
+    <script>
+        document.getElementById('id_cover_image').addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var preview = document.getElementById('coverImagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(this.files[0]);
+                this.parentElement.querySelector('span').textContent = this.files[0].name;
+            }
+        });
 
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        document.getElementById('id_content_upload').addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                this.parentElement.querySelector('span').textContent = this.files[0].name;
+            }
+        });
+    </script>
 </body>
-</html> {% endcomment %}
+</html>

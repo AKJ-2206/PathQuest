@@ -36,26 +36,44 @@ admin.site.register(User, UserAdmin)
 #     Profile.objects.get_or_create(user=user)
 
 
-@admin.register(Course)
-class CourseAdmin(admin.ModelAdmin):
-    list_display = ('title', 'created_at')
-    list_filter = ('created_at',)
-    search_fields = ('title', 'description')
-    readonly_fields = ('created_at',)
-    fieldsets = (
-        (None, {
-            'fields': ('title', 'description')
-        }),
-        ('Metadata', {
-            'fields': ('created_at',),
-            'classes': ('collapse',)
-        }),
-    )
+# @admin.register(Course)
+# class CourseAdmin(admin.ModelAdmin):
+#     list_display = ('title', 'created_at')
+#     list_filter = ('created_at',)
+#     search_fields = ('title', 'description')
+#     readonly_fields = ('created_at',)
+#     fieldsets = (
+#         (None, {
+#             'fields': ('title', 'description')
+#         }),
+#         ('Metadata', {
+#             'fields': ('created_at',),
+#             'classes': ('collapse',)
+#         }),
+#     )
 
-    def get_readonly_fields(self, request, obj=None):
-        if obj:  # editing an existing object
-            return self.readonly_fields + ('created_at',)
-        return self.readonly_fields
+#     def get_readonly_fields(self, request, obj=None):
+#         if obj:  # editing an existing object
+#             return self.readonly_fields + ('created_at',)
+#         return self.readonly_fields
     
 
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('title', 'description', 'instructor', 'price')
+    list_filter = ('instructor',)
+    search_fields = ('title', 'description', 'instructor__username')
+    readonly_fields = ('content_file_name',)
 
+    def content_file_name(self, obj):
+        return obj.content_upload.name if obj.content_upload else 'No file uploaded'
+    content_file_name.short_description = 'Content File'
+
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'description', 'instructor', 'price')
+        }),
+        ('Media', {
+            'fields': ('cover_image', 'content_upload', 'content_file_name')
+        }),
+    )
