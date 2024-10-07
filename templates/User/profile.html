@@ -102,13 +102,10 @@
             list-style: none;
             padding: 0;
         }
-<<<<<<< HEAD
         .courses-list li, .liked-courses li, .cart-items li {
             background: azure;
-=======
         .courses-list li, .liked-courses li, .cart-items li, .uploaded-courses li {
             background: #f0f0f0;
->>>>>>> af38bf5c01a74837d21854fb7f1ebc65da788f8f
             margin-bottom: 10px;
             padding: 15px;
             border-radius: 8px;
@@ -177,12 +174,12 @@
                     <img src="{{ user.profile.profile_photo.url }}" 
                          alt="Profile Picture" 
                          class="profile-pic"
-                         onerror="this.src='{% static 'images/default_profile.png' %}';">
+                         onerror="this.src='{% static 'images/default_profile.png' %}">
                 {% else %}
                     <img src="{% static 'images/default_profile.png' %}" 
                          alt="Profile Picture" 
                          class="profile-pic"
-                         onerror="this.src='{% static 'images/default_profile.png' %}';">
+                         onerror="this.src='{% static 'images/default_profile.png' %}">
                 {% endif %}
             </div>
             <h2>{{ user.username }}</h2>
@@ -282,7 +279,7 @@
             --primary-color: #6200EA;
             --secondary-color: #3700B3;
             --background-color: #f5f5f5;
-            --text-color: #333;
+            --text-color: black;
         }
         body {
             font-family: 'Arial', sans-serif;
@@ -422,12 +419,12 @@
                     <img src="{{ user.profile.profile_photo.url }}" 
                          alt="Profile Picture" 
                          class="profile-pic"
-                         onerror="this.src='{% static 'images/default_profile.png' %}';">
+                         onerror=this.src="{% static 'images/default_profile.png' %}">
                 {% else %}
                     <img src="{% static 'images/default_profile.png' %}" 
                          alt="Profile Picture" 
                          class="profile-pic"
-                         onerror="this.src='{% static 'images/default_profile.png' %}';">
+                         onerror="this.src='{% static 'images/default_profile.png' %}">
                 {% endif %}
             </div>
             <h2>{{ user.username }}</h2>

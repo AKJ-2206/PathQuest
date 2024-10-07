@@ -199,6 +199,10 @@ def course_detail(request, course_id):
 def meeting_details(request):
     return render(request, 'User\meeting-details.html')
 
+
+def meetings(request):
+    return render(request, 'User\meetings.html')
+
 @login_required
 def upload_course(request):
     if request.method == 'POST':
@@ -213,4 +217,6 @@ def upload_course(request):
 
    
     return render(request, 'User/upload_course.html', {'form': form})
+
+
 
