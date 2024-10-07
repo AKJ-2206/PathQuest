@@ -233,6 +233,9 @@ def course_detail(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     return render(request, 'course_detail.html', {'course': course})
 
+def meeting_details(request):
+    return render(request, 'User\meeting-details.html')
+
 @login_required
 def upload_course(request):
     if request.method == 'POST':
@@ -248,5 +251,3 @@ def upload_course(request):
    
     return render(request, 'User/upload_course.html', {'form': form})
 
-
-# 
