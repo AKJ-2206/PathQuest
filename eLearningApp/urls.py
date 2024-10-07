@@ -10,6 +10,7 @@ from .views import  search_results, profile_view, user_profile_view
 
 urlpatterns = [
     path('', views.index, name="index"), 
+    
     path('about', views.about, name="about"), 
     path('user_login', views.user_login, name="user_login"),
     path('registration',views.registration,name="registration"),

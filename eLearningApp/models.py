@@ -14,7 +14,7 @@ class ContactMessage(models.Model):
         return f"Message from {self.name} about {self.subject}"
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
@@ -57,3 +57,6 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+

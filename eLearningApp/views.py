@@ -14,6 +14,11 @@ from .models import Profile
 from .forms import ProfileForm
 from .models import Course
 from .forms import CourseUploadForm
+from django.db import IntegrityError
+
+
+
+
 
 
 
@@ -35,6 +40,18 @@ def user_login(request):
 
 # def registration(request):
 #     return render(request,'User/registration.html')
+# def registration(request):
+#     if request.method == 'POST':
+#         first_name = request.POST.get('f_name')
+#         last_name = request.POST.get('l_name')
+#         username = request.POST.get('username')
+#         email = request.POST.get('email')
+#         password = request.POST.get('password')
+#         user = User.objects.create_user(first_name = first_name, last_name = last_name, username = username, email = email)
+#         user.set_password(password)
+#         user.save()
+#         return render(request, 'User/index.html')
+#     return render(request, 'User/registration.html')
 def registration(request):
     if request.method == 'POST':
         first_name = request.POST.get('f_name')
@@ -42,11 +59,28 @@ def registration(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        user = User.objects.create_user(first_name = first_name, last_name = last_name, username = username, email = email)
-        user.set_password(password)
-        user.save()
-        return render(request, 'User/index.html')
+
+        # Check if the username already exists
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists. Please choose a different username.")
+            return render(request, 'User/registration.html')
+
+        try:
+            user = User.objects.create_user(
+                first_name=first_name,
+                last_name=last_name,
+                username=username,
+                email=email,
+            )
+            user.set_password(password)
+            user.save()
+            messages.success(request, "Registration successful!")
+            return redirect('login')  # Redirect to your login page or another page
+        except IntegrityError:
+            messages.error(request, "An error occurred during registration. Please try again.")
+
     return render(request, 'User/registration.html')
+
 
 def user_logout(request):
     logout(request)
@@ -158,17 +192,20 @@ def courses_view(request):
 
     return render(request, 'User/index.html', {'courses': courses})
 
+# def search_results(request):
+#     query = request.GET.get('q', '')
+#     user_results = User.objects.filter(username__icontains=query)  
+#     course_results = Course.objects.filter(title__icontains=query) 
+#     return render(request, 'User/search_results.html', {
+#         'query': query,
+#         'user_results': user_results,  
+#         'results': course_results,      
+#     })
+
 def search_results(request):
-    query = request.GET.get('q', '')
-    user_results = User.objects.filter(username__icontains=query)  # QuerySet of users
-    course_results = Course.objects.filter(title__icontains=query)  # Adjust this as per your model
-
-    return render(request, 'User/search_results.html', {
-        'query': query,
-        'user_results': user_results,  # This should be a queryset
-        'results': course_results,      # Assuming results is for courses
-    })
-
+    query = request.GET.get('q')
+    results = Course.objects.filter(title__icontains=query)  # Make sure this line refers to 'title'
+    return render(request, 'User/search_results.html', {'results': results})
 
     
     return render(request, 'User/search_results.html', {
@@ -211,7 +248,7 @@ def upload_course(request):
             course = form.save(commit=False)
             course.instructor = request.user  
             course.save()  
-            return redirect('profile')  
+            return redirect('profile',request.user.id)  
     else:
         form = CourseUploadForm()  
 

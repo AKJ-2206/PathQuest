@@ -31,9 +31,9 @@ class UserAdmin(BaseUserAdmin):
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
-users = User.objects.all()
-for user in users:
-    Profile.objects.get_or_create(user=user)
+# users = User.objects.all()
+# for user in users:
+#     Profile.objects.get_or_create(user=user)
 
 
 @admin.register(Course)
