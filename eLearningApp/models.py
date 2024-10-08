@@ -54,6 +54,8 @@ class Course(models.Model):
     image = models.ImageField(upload_to='course_images/', null=True, blank=True)
     instructor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='courses')
     created_at = models.DateTimeField(auto_now_add=True)
+    cover_image = models.ImageField(upload_to='course_images/', blank=True, null=True)
+    content_upload = models.FileField(upload_to='course_content/', blank=True, null=True)
 
     def __str__(self):
         return self.title

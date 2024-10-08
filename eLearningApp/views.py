@@ -13,8 +13,10 @@ from .forms import ProfileForm
 from .models import Profile
 from .forms import ProfileForm
 from .models import Course
-from .forms import CourseUploadForm
+# from .forms import CourseUploadForm
 from django.db import IntegrityError
+from .forms import CourseForm
+
 
 
 
@@ -52,6 +54,35 @@ def user_login(request):
 #         user.save()
 #         return render(request, 'User/index.html')
 #     return render(request, 'User/registration.html')
+# def registration(request):
+#     if request.method == 'POST':
+#         first_name = request.POST.get('f_name')
+#         last_name = request.POST.get('l_name')
+#         username = request.POST.get('username')
+#         email = request.POST.get('email')
+#         password = request.POST.get('password')
+
+#         # Check if the username already exists
+#         if User.objects.filter(username=username).exists():
+#             messages.error(request, "Username already exists. Please choose a different username.")
+#             return render(request, 'User/registration.html')
+
+#         try:
+#             user = User.objects.create_user(
+#                 first_name=first_name,
+#                 last_name=last_name,
+#                 username=username,
+#                 email=email,
+#             )
+#             user.set_password(password)
+#             user.save()
+#             messages.success(request, "Registration successful!")
+#             return redirect('login')  # Redirect to your login page or another page
+#         except IntegrityError:
+#             messages.error(request, "An error occurred during registration. Please try again.")
+
+#     return render(request, 'User/registration.html')
+
 def registration(request):
     if request.method == 'POST':
         first_name = request.POST.get('f_name')
@@ -60,26 +91,43 @@ def registration(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        # Check if the username already exists
+        # Check if the username or email already exists
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists. Please choose a different username.")
+            return render(request, 'User/registration.html')
+        
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email already exists. Please use a different email address.")
             return render(request, 'User/registration.html')
 
         try:
             user = User.objects.create_user(
-                first_name=first_name,
-                last_name=last_name,
                 username=username,
                 email=email,
+                password=password,
+                first_name=first_name,
+                last_name=last_name
             )
-            user.set_password(password)
-            user.save()
-            messages.success(request, "Registration successful!")
-            return redirect('login')  # Redirect to your login page or another page
-        except IntegrityError:
-            messages.error(request, "An error occurred during registration. Please try again.")
+            messages.success(request, "Registration successful! You can now log in.")
+            return redirect('login')  
+        except IntegrityError as e:
+            messages.error(request, f"An error occurred during registration: {str(e)}")
+        except Exception as e:
+            messages.error(request, f"An unexpected error occurred: {str(e)}")
 
     return render(request, 'User/registration.html')
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')  # Redirect to your home page
+        else:
+            messages.error(request, "Invalid username or password.")
+    return render(request, 'User/login.html')
 
 
 def user_logout(request):
@@ -243,17 +291,58 @@ def meetings(request):
 @login_required
 def upload_course(request):
     if request.method == 'POST':
-        form = CourseUploadForm(request.POST, request.FILES)
+        form = CourseForm(request.POST, request.FILES)
         if form.is_valid():
             course = form.save(commit=False)
             course.instructor = request.user  
             course.save()  
             return redirect('profile',request.user.id)  
     else:
-        form = CourseUploadForm()  
+        form = CourseForm()  
+        
 
    
     return render(request, 'User/upload_course.html', {'form': form})
 
+@login_required
+def edit_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id, instructor=request.user)
+    if request.method == 'POST':
+        form = CourseForm(request.POST, request.FILES, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('course_detail', course_id=course.id)
+    else:
+        form = CourseForm(instance=course)
+    return render(request, 'edit_course.html', {'form': form, 'course': course})
 
+@login_required
+def delete_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id, instructor=request.user)
+    if request.method == 'POST':
+        course.delete()
+        return redirect('profile')  # or wherever you want to redirect after deletion
+    return render(request, 'delete_course.html', {'course': course})
 
+def create_course(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST, request.FILES)
+        if form.is_valid():
+            course = form.save(commit=False)
+            course.instructor = request.user
+            course.save()
+            return redirect('course_detail', course_id=course.id)
+    else:
+        form = CourseForm()
+    return render(request, 'create_course.html', {'form': form})
+
+def edit_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id, instructor=request.user)
+    if request.method == 'POST':
+        form = CourseForm(request.POST, request.FILES, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('course_detail', course_id=course.id)
+    else:
+        form = CourseForm(instance=course)
+    return render(request, 'edit_course.html', {'form': form, 'course': course})
