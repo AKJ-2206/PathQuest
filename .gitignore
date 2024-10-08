@@ -1,5 +1,5 @@
-# Virtual environment
-myenv/
+db.sqlite3
+media/
 
 # Python byte-compiled files
 __pycache__/
