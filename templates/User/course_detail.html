@@ -1,0 +1,24 @@
+
+{% load static %}
+
+<div class="course-detail-container">
+    <h1>{{ course.title }}</h1>
+    <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" class="course-image">
+    <p><strong>Instructor:</strong> {{ course.instructor.username }}</p>
+    <p><strong>Description:</strong> {{ course.description }}</p>
+    <p><strong>Price:</strong> ${{ course.price }}</p>
+    <p><strong>Duration:</strong> {{ course.duration }} hours</p>
+    <p><strong>Level:</strong> {{ course.get_level_display }}</p>
+    <p><strong>Category:</strong> {{ course.category }}</p>
+    
+    {% if course.syllabus %}
+    <h2>Syllabus</h2>
+    <ul>
+        {% for item in course.syllabus.all %}
+        <li>{{ item.title }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
+    <a href="{% url 'index' %}" class="btn btn-primary">Back to Home</a>
+</div>

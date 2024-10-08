@@ -15,6 +15,15 @@ from .forms import ProfileForm
 from .models import Course
 from django.db import IntegrityError
 from .forms import CourseForm
+from django.http import Http404
+import zipfile
+import os
+from django.conf import settings
+from django.http import FileResponse
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+
 
 def index(request):
     return render(request, 'User/index.html')
@@ -41,16 +50,12 @@ def registration(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
-
-        # Check if the username or email already exists
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists. Please choose a different username.")
             return render(request, 'User/registration.html')
-        
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already exists. Please use a different email address.")
             return render(request, 'User/registration.html')
-
         try:
             user = User.objects.create_user(
                 username=username,
@@ -65,7 +70,6 @@ def registration(request):
             messages.error(request, f"An error occurred during registration: {str(e)}")
         except Exception as e:
             messages.error(request, f"An unexpected error occurred: {str(e)}")
-
     return render(request, 'User/registration.html')
 
 def user_login(request):
@@ -75,7 +79,7 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('index')  # Redirect to your home page
+            return redirect('index')  
         else:
             messages.error(request, "Invalid username or password.")
     return render(request, 'User/login.html')
@@ -92,22 +96,14 @@ def contact_message(request):
         email = request.POST.get('email')
         subject = request.POST.get('subject')
         message = request.POST.get('message')
-        
-        # Create and save the ContactMessage instance
         ContactMessage.objects.create(
             name=name,
             email=email,
             subject=subject,
             message=message
         )
-        
-        # Show a success message
         messages.success(request, 'Your message has been sent successfully!')
-        
-        # Redirect to the homepage or another page
-        return redirect('index')  # Adjust the redirect as needed
-        
-    # If not a POST request, redirect to the contact form or another page
+        return redirect('index')  
     return redirect('index')
 
 def update_profile(request):
@@ -116,7 +112,6 @@ def update_profile(request):
     except Profile.DoesNotExist:
         profile = Profile(user=request.user)
         profile.save()
-    
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
@@ -124,24 +119,20 @@ def update_profile(request):
             return redirect('profile')
     else:
         form = ProfileForm(instance=profile)
-    
     return render(request, 'User/update_profile.html', {'form': form})
 
 @login_required
-def profile_view(request,user_id):
-    try:
-        profile = Profile.objects.get(user=user_id)
-    except Profile.DoesNotExist:
-        profile = None
+def profile_view(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    uploaded_courses = Course.objects.filter(instructor=user)
     
-    return render(request, 'User/profile.html', {'profile': profile})
+    context = {
+        'user': user,
+        'uploaded_courses': uploaded_courses,  
+    }
+    return render(request, 'User/profile.html', context)
 
 
-
-
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import get_object_or_404
   
 @login_required
 def edit_profile(request):
@@ -150,14 +141,10 @@ def edit_profile(request):
 @csrf_exempt
 def update_profile(request):
     if request.method == 'POST':
-        # Handle form data here
-        # For example:
         user = request.user
         if user.is_authenticated:
             description = request.POST.get('description', '')
             profile_photo = request.FILES.get('profile_photo', None)
-
-            # Update profile information
             user.profile.description = description
             if profile_photo:
                 user.profile.profile_photo = profile_photo
@@ -172,7 +159,6 @@ def update_profile(request):
 def courses_view(request):
     courses = Course.objects.all()
 
-    # Prepare courses data with stars
     for course in courses:
         course.stars = range(course.rating)
 
@@ -182,7 +168,7 @@ def courses_view(request):
 
 def search_results(request):
     query = request.GET.get('q')
-    results = Course.objects.filter(title__icontains=query)  # Make sure this line refers to 'title'
+    results = Course.objects.filter(title__icontains=query)  
     return render(request, 'User/search_results.html', {'results': results})
 
     
@@ -199,7 +185,7 @@ def user_profile(request):
     return render(request, 'User/profile.html', {'user': user})
 
 def user_profile_view(request, user_id):
-    user = get_object_or_404(User, id=user_id)  # Fetch the user by ID
+    user = get_object_or_404(User, id=user_id) 
     return render(request, 'user_profile.html', {'user': user})
 
 
@@ -207,9 +193,7 @@ def course_list(request):
     courses = Course.objects.all()
     return render(request, 'course_list.html', {'courses': courses})
 
-def course_detail(request, course_id):
-    course = get_object_or_404(Course, id=course_id)
-    return render(request, 'course_detail.html', {'course': course})
+
 
 def meeting_details(request):
     return render(request, 'User/meeting-details.html')
@@ -229,9 +213,6 @@ def upload_course(request):
             return redirect('profile',request.user.id)  
     else:
         form = CourseForm()  
-        
-
-   
     return render(request, 'User/upload_course.html', {'form': form})
 
 @login_required
@@ -244,16 +225,19 @@ def edit_course(request, course_id):
             return redirect('course_detail', course_id=course.id)
     else:
         form = CourseForm(instance=course)
-    return render(request, 'edit_course.html', {'form': form, 'course': course})
+    return render(request, 'User/edit_course.html', {'form': form, 'course': course})
 
 @login_required
 def delete_course(request, course_id):
-    course = get_object_or_404(Course, id=course_id, instructor=request.user)
+    course = get_object_or_404(Course, id=course_id)
+    if request.user != course.instructor:
+        raise Http404("You don't have permission to delete this course.") 
     if request.method == 'POST':
         course.delete()
-        return redirect('profile')  # or wherever you want to redirect after deletion
-    return render(request, 'delete_course.html', {'course': course})
+        return redirect('profile', user_id=request.user.id)
+    return render(request, 'User/delete_course.html', {'course': course})
 
+@login_required
 def create_course(request):
     if request.method == 'POST':
         form = CourseForm(request.POST, request.FILES)
@@ -264,15 +248,46 @@ def create_course(request):
             return redirect('course_detail', course_id=course.id)
     else:
         form = CourseForm()
-    return render(request, 'create_course.html', {'form': form})
+    return render(request, 'User/create_course.html', {'form': form})
 
+@login_required
 def edit_course(request, course_id):
     course = get_object_or_404(Course, id=course_id, instructor=request.user)
     if request.method == 'POST':
         form = CourseForm(request.POST, request.FILES, instance=course)
         if form.is_valid():
-            form.save()
-            return redirect('course_detail', course_id=course.id)
+            form.save()  
+            return redirect('profile', user_id=request.user.id)  
     else:
         form = CourseForm(instance=course)
-    return render(request, 'edit_course.html', {'form': form, 'course': course})
+
+    return render(request, 'User/edit_course.html', {'form': form, 'course': course})
+
+def view_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    return render(request, 'User/course_detail.html', {'course': course})
+
+def view_pdf(request, course_id, file_name):
+    course = get_object_or_404(Course, id=course_id)
+    zip_path = os.path.join(settings.MEDIA_ROOT, str(course.file))
+    
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        try:
+            pdf_file = zip_ref.open(file_name)
+            return FileResponse(pdf_file, content_type='application/pdf')
+        except KeyError:
+            raise Http404("PDF file not found in the course content.")
+
+def view_video(request, course_id, file_name):
+    course = get_object_or_404(Course, id=course_id)
+    zip_path = os.path.join(settings.MEDIA_ROOT, str(course.file))
+    
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        try:
+            video_file = zip_ref.open(file_name)
+            response = FileResponse(video_file, content_type='video/mp4')
+            response['Content-Disposition'] = f'inline; filename="{file_name}"'
+            return response
+        except KeyError:
+            raise Http404("Video file not found in the course content.")
+

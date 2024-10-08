@@ -26,13 +26,13 @@
             --text-color: #ffffff;
         }
         body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            color: var(--text-color);
-            background: #000;
-            overflow-x: hidden;
-        }
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+    background: transparent; /* Makes the background transparent */
+    overflow-x: hidden;
+}
         #bg-video {
             position: fixed;
             right: 0;
@@ -121,6 +121,32 @@
             padding-bottom: 10px;
             color: var(--primary-color);
         }
+
+        .bio-section {
+    background-color: #f0f0f0; /* Light gray background for the section */
+    padding: 20px;             /* Space around the content */
+    border-radius: 8px;        /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    max-width: 600px;          /* Optional: Limit the width for readability */
+    margin: 20px auto;         /* Center the section and add spacing */
+}
+
+.bio-section h3 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #333;               /* Darker color for the heading */
+}
+
+.bio-section p {
+    font-size: 16px;
+    color: #555;               /* Darker color for readability */
+    background-color: #ffffff; /* Solid white background for the paragraph */
+    padding: 15px;             /* Space around the description */
+    border-radius: 4px;        /* Rounded corners for the paragraph */
+    line-height: 1.5;          /* Improve readability */
+}
+         
+
         .courses-list, .liked-courses, .uploaded-courses {
             margin-top: 20px;
         }
@@ -139,6 +165,7 @@
             justify-content: space-between;
             align-items: center;
         }
+        
         .courses-list li:hover, .liked-courses li:hover, .uploaded-courses li:hover {
             transform: translateY(-3px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -203,12 +230,33 @@
     </style>
 </head>
 <body>
-    <video autoplay muted loop id="bg-video">
-        <source src="{% static 'staticfiles/images/course-video.mp4' %}" type="video/mp4">
-    </video>
-    <div class="overlay"></div>
+    
+    <div class="video-container">
+    <iframe 
+        id="bg-video"
+        src="https://www.youtube.com/embed/BadB1z-V_qU?autoplay=1&mute=1&loop=1&playlist=BadB1z-V_qU&controls=0&showinfo=0&modestbranding=1&fs=0&disablekb=1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen>
+    </iframe>
+</div>
+<div class="overlay"></div>
+
+
 
     <div class="container">
+
+     <div class="video-container">
+    <iframe 
+        id="bg-video"
+        src="https://www.youtube.com/embed/BadB1z-V_qU?autoplay=1&mute=1&loop=1&playlist=BadB1z-V_qU&controls=0&showinfo=0&modestbranding=1&fs=0&disablekb=1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen>
+    </iframe>
+</div>
+<div class="overlay"></div>
+    
         <div class="row">
             <div class="col-12">
                 <nav class="main-nav">
@@ -228,8 +276,10 @@
             </div>
         </div>
     </div>
+    
 
     <div class="profile-container">
+    
         <div class="profile-header">
             <div class="profile-pic-wrapper">
                 {% if user.profile.profile_photo %}
@@ -275,35 +325,39 @@
             </ul>
         </div>
 
+        <h2 class="section-title">Cart Courses</h2>
+        <div class="liked-courses">
+            <ul>
+                {% for course in user.profile.cart_courses.all %}
+                    <li>{{ course.title }}</li>
+                {% empty %}
+                    <li>No liked courses yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
         <h2 class="section-title">Uploaded Courses</h2>
         <div class="uploaded-courses">
         
-            {% comment %} <ul>
-                {% for course in uploaded_courses %}
-                    <li>
-                        {{ course.title }}
-                        <a href="#" class="view-course-btn">View</a>
-                    </li>
-                {% empty %}
-                    <li>No courses uploaded.</li>
-                {% endfor %}
-            </ul> {% endcomment %}
-            {% if upload_course %}
-                {% for course in upload_course %}
-                    <div class="course-card">
-                        <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" class="course-thumbnail" onerror="this.src='{% static 'images/default_course_thumbnail.png' %}';">
-                        <span class="instructor-name">{{ course.instructor.username }}</span>
-                        <div class="course-info">
-                            <h3 class="course-title">{{ course.title }}</h3>
-                            <a href="{% url 'course_detail' course.id %}" class="view-course-btn">View</a>
-                            <a href="{% url 'edit_course' course.id %}" class="edit-course-btn">Edit</a>
-                            <a href="{% url 'delete_course' course.id %}" class="delete-course-btn" onclick="return confirm('Are you sure you want to delete this course?');">Delete</a>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p>No courses uploaded yet.</p>
-            {% endif %}
+
+    {% if uploaded_courses %}
+        {% for course in uploaded_courses %}
+            <div class="course-card">
+                <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" class="course-thumbnail" onerror="this.src='{% static 'images/default_course_thumbnail.png' %}';">
+                <span class="instructor-name">{{ course.instructor.username }}</span>
+                <div class="course-info">
+                    <h3 class="course-title">{{ course.title }}</h3>
+                    <h3 class="course-title">{{ course.title }}</h3>
+    <a href="{% url 'view_course' course.id %}" class="view-course-btn">View</a>
+    <a href="{% url 'edit_course' course.id %}" class="edit-course-btn">Edit</a>
+    <a href="{% url 'delete_course' course.id %}" class="delete-course-btn" onclick="return confirm('Are you sure you want to delete this course?');">Delete</a>
+
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No courses uploaded yet.</p>
+    {% endif %}
         </div>
 
         <div class="upload-section">
