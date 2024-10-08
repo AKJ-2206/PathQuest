@@ -13,16 +13,8 @@ from .forms import ProfileForm
 from .models import Profile
 from .forms import ProfileForm
 from .models import Course
-# from .forms import CourseUploadForm
 from django.db import IntegrityError
 from .forms import CourseForm
-
-
-
-
-
-
-
 
 def index(request):
     return render(request, 'User/index.html')
@@ -40,48 +32,7 @@ def user_login(request):
             return render(request, 'User/index.html')
     return render(request, 'User/login.html')
 
-# def registration(request):
-#     return render(request,'User/registration.html')
-# def registration(request):
-#     if request.method == 'POST':
-#         first_name = request.POST.get('f_name')
-#         last_name = request.POST.get('l_name')
-#         username = request.POST.get('username')
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-#         user = User.objects.create_user(first_name = first_name, last_name = last_name, username = username, email = email)
-#         user.set_password(password)
-#         user.save()
-#         return render(request, 'User/index.html')
-#     return render(request, 'User/registration.html')
-# def registration(request):
-#     if request.method == 'POST':
-#         first_name = request.POST.get('f_name')
-#         last_name = request.POST.get('l_name')
-#         username = request.POST.get('username')
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
 
-#         # Check if the username already exists
-#         if User.objects.filter(username=username).exists():
-#             messages.error(request, "Username already exists. Please choose a different username.")
-#             return render(request, 'User/registration.html')
-
-#         try:
-#             user = User.objects.create_user(
-#                 first_name=first_name,
-#                 last_name=last_name,
-#                 username=username,
-#                 email=email,
-#             )
-#             user.set_password(password)
-#             user.save()
-#             messages.success(request, "Registration successful!")
-#             return redirect('login')  # Redirect to your login page or another page
-#         except IntegrityError:
-#             messages.error(request, "An error occurred during registration. Please try again.")
-
-#     return render(request, 'User/registration.html')
 
 def registration(request):
     if request.method == 'POST':
@@ -185,20 +136,7 @@ def profile_view(request,user_id):
     
     return render(request, 'User/profile.html', {'profile': profile})
 
-# @login_required
-# def profile_view(request, user_id):
-#     # Get the user's profile; if not found, return a 404
-#     profile = get_object_or_404(Profile, user__id=user_id)
 
-#     # Get uploaded courses by the user
-#     uploaded_courses = Course.objects.filter(uploaded_by=request.user)
-
-#     # Pass the profile and uploaded courses to the template
-#     return render(request, 'User/profile.html', {
-#         'profile': profile,
-#         'uploaded_courses': uploaded_courses,
-#         'user': request.user
-#     })
 
 
 from django.http import JsonResponse
@@ -240,15 +178,7 @@ def courses_view(request):
 
     return render(request, 'User/index.html', {'courses': courses})
 
-# def search_results(request):
-#     query = request.GET.get('q', '')
-#     user_results = User.objects.filter(username__icontains=query)  
-#     course_results = Course.objects.filter(title__icontains=query) 
-#     return render(request, 'User/search_results.html', {
-#         'query': query,
-#         'user_results': user_results,  
-#         'results': course_results,      
-#     })
+
 
 def search_results(request):
     query = request.GET.get('q')
