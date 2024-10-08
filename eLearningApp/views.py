@@ -282,11 +282,11 @@ def course_detail(request, course_id):
     return render(request, 'course_detail.html', {'course': course})
 
 def meeting_details(request):
-    return render(request, 'User\meeting-details.html')
+    return render(request, 'User/meeting-details.html')
 
 
 def meetings(request):
-    return render(request, 'User\meetings.html')
+    return render(request, 'User/meetings.html')
 
 @login_required
 def upload_course(request):
