@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-{% comment %} 
-=======
 {% comment %} {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +31,10 @@
         }
         body {
             font-family: 'Arial', sans-serif;
-            background-color: var(--background-color);
+            background-image: url("{% static 'images/wall.jpg' %}"); /* Background image */
+            background-size: cover; /* Cover the entire viewport */
+            background-repeat: no-repeat; /* Prevent repetition of the image */
+            /* background-color: var(--background-color); */
             margin: 0;
             padding: 20px;
             color: var(--text-color);
@@ -250,12 +250,8 @@
 
 
 
-
->>>>>>> origin/main
-
-
-
- {% load static %}
+<!-- 
+ <!-- {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -479,7 +475,7 @@
     </div>
 
 </body>
-</html> {% endcomment %}
+</html> {% endcomment %} -->
 
  {% load static %}
 
@@ -764,4 +760,4 @@
     </div>
 
 </body>
-</html>
+</html> 

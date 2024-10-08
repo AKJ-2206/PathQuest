@@ -97,7 +97,7 @@
                 <a href="javascript:void(0)">Pages</a>
                 <ul class="sub-menu">
                   <li><a href="{% url 'meeting_details'%}">Upcoming Meetings</a></li>
-                  <li><a href="meeting-details.html">Meeting Details</a></li>
+                  <li><a href="{% url 'meetings' %}">Meeting Details</a></li>
                 </ul>
               </li>
               <li class="scroll-to-section"><a href="#contact">Contact Us</a></li>
@@ -156,51 +156,97 @@
 
             <div class="item">
               <div class="icon">
-                <img src="{% static 'images/service-icon-01.png' %}" alt="">
+                <a href="/best-education/"> <!-- Link to the Best Education Page -->
+                  <img src="{% static 'images/service-icon-01.png' %}" alt="Best Education">
+              </a>
+          </div>
+          <div class="down-content">
+              <h4><a href="/best-education/">Best Education</a></h4>
+              <p>Learning helps you reach your goals. Keep learning and reap the rewards.
+                -----------------------------------------------------------------------
+              </p>
+                <!-- <img src="{% static 'images/service-icon-01.png' %}" alt="">
               </div>
               <div class="down-content">
                 <h4>Best Education</h4>
-                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p>
+                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p> -->
               </div>
             </div>
 
             <div class="item">
               <div class="icon">
-                <img src="{% static 'images/service-icon-02.png' %}" alt="">
+                <a href="/best-teachers/"> <!-- Link to the Best Teachers Page -->
+                  <img src="{% static 'images/service-icon-02.png' %}" alt="Best Teachers">
+              </a>
+          </div>
+          <div class="down-content">
+              <h4><a href="/best-teachers/">Best Teachers</a></h4>
+              <p>Education is not the filling of a pail, but the lighting of a fire.
+                -----------------------------------------------------------------------
+              </p>
+                <!-- <img src="{% static 'images/service-icon-02.png' %}" alt="">
               </div>
               <div class="down-content">
                 <h4>Best Teachers</h4>
-                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p>
+                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p> -->
               </div>
             </div>
 
             <div class="item">
               <div class="icon">
-                <img src="{% static 'images/service-icon-03.png' %}" alt="">
+                <a href="/best-students/"> <!-- Link to the Best Students Page -->
+                  <img src="{% static 'images/service-icon-03.png' %}" alt="Best Students">
+              </a>
+          </div>
+          <div class="down-content">
+              <h4><a href="/best-students/">Best Students</a></h4>
+              <p>Learning is not attained by chance, it must be sought for with ardor and diligence.
+                -----------------------------------
+              </p>
+
+                <!-- <img src="{% static 'images/service-icon-03.png' %}" alt="">
               </div>
               <div class="down-content">
                 <h4>Best Students</h4>
-                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p>
+                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p> -->
               </div>
             </div>
 
             <div class="item">
               <div class="icon">
-                <img src="{% static 'images/service-icon-02.png' %}" alt="">
+                <a href="/Online Meeting/"> <!-- Link to the Best Students Page -->
+                  <img src="{% static 'images/service-icon-02.png' %}" alt="Online Meeting">
+              </a>
+          </div>
+          <div class="down-content">
+              <h4><a href="/online-meeting/">Online Meeting</a></h4>
+              <p>Suspendsisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p>
+
+                <!-- <img src="{% static 'images/service-icon-02.png' %}" alt="">
               </div>
               <div class="down-content">
                 <h4>Online Meeting</h4>
-                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p>
+                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p> -->
               </div>
             </div>
 
             <div class="item">
               <div class="icon">
-                <img src="{% static 'images/service-icon-03.png' %}" alt="">
+                <a href="/best-networking/"> <!-- Link to the Best Students Page -->
+                  <img src="{% static 'images/service-icon-03.png' %}" alt="Best Networking">
+              </a>
+          </div>
+          <div class="down-content">
+              <h4><a href="/best-networking/">Best Networking</a></h4>
+              <p>Networking is simply the cultivating of mutually beneficial, give-and-take, win-win relationships.
+                -----------------------------------------
+              </p>
+
+                <!-- <img src="{% static 'images/service-icon-03.png' %}" alt="">
               </div>
               <div class="down-content">
                 <h4>Best Networking</h4>
-                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p>
+                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p> -->
               </div>
             </div>
 
@@ -756,6 +802,7 @@
     </div>
   </section>
 
+  
   <section class="contact-us" id="contact">
     <div class="container">
       <div class="row">
