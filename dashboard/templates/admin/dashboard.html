@@ -1,0 +1,109 @@
+
+{% load static %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .dashboard-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 20px;
+    }
+    .dashboard-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+    .dashboard-card h2 {
+        margin-top: 0;
+        color: #333;
+    }
+    .chart-container {
+        position: relative;
+        height: 300px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-card">
+        <h2>Courses by Category</h2>
+        <div class="chart-container">
+            <canvas id="coursesByCategoryChart"></canvas>
+        </div>
+    </div>
+    <div class="dashboard-card">
+        <h2>User Registrations Over Time</h2>
+        <div class="chart-container">
+            <canvas id="usersOverTimeChart"></canvas>
+        </div>
+    </div>
+    <div class="dashboard-card">
+        <h2>Recent Contact Messages</h2>
+        <ul>
+            {% for message in recent_messages %}
+            <li>{{ message.name }} - {{ message.created_at|date:"F d, Y" }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="dashboard-card">
+        <h2>Top Courses by Enrollment</h2>
+        <ul>
+            {% for course in top_courses %}
+            <li>{{ course.title }} - {{ course.student_count }} students</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+    // Courses by Category Chart
+    var ctxCourses = document.getElementById('coursesByCategoryChart').getContext('2d');
+    new Chart(ctxCourses, {
+        type: 'pie',
+        data: {
+            labels: [{% for item in courses_by_category %}'{{ item.category }}',{% endfor %}],
+            datasets: [{
+                data: [{% for item in courses_by_category %}{{ item.count }},{% endfor %}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 206, 86, 0.8)',
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(153, 102, 255, 0.8)',
+                ],
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    });
+
+    // Users Over Time Chart
+    var ctxUsers = document.getElementById('usersOverTimeChart').getContext('2d');
+    new Chart(ctxUsers, {
+        type: 'line',
+        data: {
+            labels: [{% for item in users_over_time %}'{{ item.month|date:"F Y" }}',{% endfor %}],
+            datasets: [{
+                label: 'New Users',
+                data: [{% for item in users_over_time %}{{ item.count }},{% endfor %}],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>

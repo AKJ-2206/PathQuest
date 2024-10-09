@@ -25,6 +25,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 
 
+
+
+
+
+
+
+
 def index(request):
     return render(request, 'User/index.html')
 
@@ -290,4 +297,6 @@ def view_video(request, course_id, file_name):
             return response
         except KeyError:
             raise Http404("Video file not found in the course content.")
+
+
 

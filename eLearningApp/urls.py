@@ -34,4 +34,6 @@ urlpatterns = [
     path('course/<int:course_id>/pdf/<str:file_name>/', views.view_pdf, name='view_pdf'),
     path('course/<int:course_id>/video/<str:file_name>/', views.view_video, name='view_video'),
     path('profile/<int:user_id>/', views.user_profile, name='profile'),
+    
+    
 ]
