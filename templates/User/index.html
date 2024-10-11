@@ -81,7 +81,8 @@
                             <li><a href="{% url 'user_login' %}">Login</a></li> 
                           {% endif %}
                           <li class="scroll-to-section"><a href="#apply">Apply Now</a></li>
-                          <li class="scroll-to-section"><a href="#courses">Courses</a></li> 
+                          {% comment %} <li class="scroll-to-section"><a href="#courses">Courses</a></li>  {% endcomment %}
+                          <li><a href="{% url 'course_showcase' %}">Courses</a></li> 
                           
 
               <li class="has-sub">

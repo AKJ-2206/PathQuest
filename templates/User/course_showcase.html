@@ -7,7 +7,8 @@
     <meta name="description" content="">
     <meta name="author" content="Template Mo">
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
-    <title>Education - List of Meetings</title>
+    <link rel="icon" href="{% static 'images/logo.jpg' %}" type="image/x-icon">
+    <title>Education - List of Courses</title>
     <!-- Bootstrap core CSS -->
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
     <!-- Additional CSS Files -->
@@ -16,6 +17,142 @@
     <link rel="stylesheet" href="{% static 'css/owl.css' %}">
     <link rel="stylesheet" href="{% static 'css/lightbox.css' %}">
     <style>
+
+
+    /* General header styling */
+header {
+    background-color: #333; /* Dark background for contrast */
+    padding: 15px 0; /* Padding for top and bottom */
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+}
+
+header .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+}
+
+/* Styling for the main navigation bar */
+.main-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%; /* Ensures nav takes full width */
+}
+
+.main-nav .search-form {
+    display: inline-block;
+    margin-right: auto; /* Align search form to the left */
+}
+
+/* Search form styling */
+.search-form input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.search-form button {
+    padding: 8px 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Styling for navigation links */
+.nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.nav li:last-child {
+    margin-right: 0; /* Remove margin on the last list item */
+}
+
+.nav a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 8px 12px;
+    transition: color 0.3s ease;
+}
+
+.nav a:hover {
+    color: #007BFF;
+}
+
+/* Add responsiveness */
+@media (max-width: 768px) {
+    .main-nav {
+        flex-direction: column;
+    }
+
+    .nav {
+        text-align: center;
+    }
+
+    .nav li {
+        display: block;
+        margin: 10px 0;
+    }
+
+    .search-form {
+        margin: 10px auto;
+    }
+}
+
+
+
+    /* Styling for the heading section */
+.heading-page {
+    padding: 100px 0; /* Adjust padding for better spacing */
+    background-color: #333; /* Dark background color for contrast */
+    text-align: center; /* Center-align the text */
+}
+
+/* Styling for h5 */
+.heading-page h5 {
+    color: #ffffff; /* White color for h5 */
+    font-weight: bold; /* Make the h5 text bold */
+    font-size: 1.5em; /* Adjust font size */
+    margin-bottom: 10px; /* Add space below the h5 */
+}
+
+/* Styling for h1 */
+.heading-page h1 {
+    color: #ffffff; /* White color for h1 */
+    font-weight: bold; /* Make the h1 text bold */
+    font-size: 3em; /* Increase font size for emphasis */
+    margin-top: 10px; /* Add space above the h1 */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .heading-page h1 {
+        font-size: 2.5em; /* Adjust font size for smaller screens */
+    }
+
+    .heading-page h5 {
+        font-size: 1.2em;
+    }
+}
+
         .course-thumbnail {
             width: 100%;
             height: 150px;
@@ -66,9 +203,134 @@
             padding: 5px 10px;
             font-size: 14px;
         }
+         
+         /* Overall section styling */
+.meetings-page {
+    background: rgba(255, 255, 255, 0.8); /* Translucent white background */
+    padding: 50px 0;
+}
+
+/* Container to align the featured courses */
+.course-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Styling for individual course cards */
+.course-card {
+    background: rgba(0, 0, 255, 0.1); /* Slightly translucent blue background */
+    border: 1px solid rgba(0, 0, 255, 0.2); /* Light blue border */
+    border-radius: 8px;
+    width: 300px; /* Set a fixed width for the cards */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect for course cards */
+.course-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for the course thumbnail */
+.course-thumbnail {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+/* Styling for the course info section */
+.course-info {
+    padding: 15px;
+    text-align: center;
+    color: blue; /* Blue text color */
+}
+
+/* Course title styling */
+.course-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: blue; /* Blue text color */
+}
+
+/* Instructor name styling */
+.instructor-name {
+    font-size: 1em;
+    color: rgba(0, 0, 255, 0.7); /* Slightly lighter blue */
+}
+
+/* Button styling */
+.course-actions .btn {
+    padding: 10px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-cart-btn {
+    background-color: rgba(0, 0, 255, 0.2); /* Translucent blue */
+    border: 1px solid rgba(0, 0, 255, 0.3);
+    color: blue;
+}
+
+.add-to-cart-btn:hover {
+    background-color: rgba(0, 0, 255, 0.3);
+}
+
+.purchase-btn {
+    background-color: blue;
+    color: white;
+    border: none;
+}
+
+.purchase-btn:hover {
+    background-color: darkblue;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .course-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .course-card {
+        width: 100%;
+    }
+}
+
+
+
     </style>
 </head>
 <body>
+
+<header>
+ <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <form action="{% url 'search_results' %}" method="GET" class="search-form" style="display: inline-block; margin-left: 20px;">
+                        <input type="text" name="q" placeholder="Search..." required>
+                        <button type="submit">Search</button>
+                    </form>
+                    <ul class="nav" style="list-style: none; display: inline-block; margin: 0; padding: 0;">
+                        <li style="display: inline; margin-right: 20px;"><a href="{% url 'index' %}">Home</a></li>
+                        {% if user.is_authenticated %}
+                            <li style="display: inline;"><a href="{% url 'user_logout' %}">Logout</a></li>
+                        {% else %}
+                            <li style="display: inline;"><a href="{% url 'user_login' %}">Login</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    </header>
     <!-- Top Cart -->
     <div class="top-cart">
         <i class="fa fa-shopping-cart"></i> Cart (<span id="cart-count">0</span>)
@@ -88,8 +350,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <h6>Here are our upcoming meetings</h6>
-                    <h2>Upcoming Meetings</h2>
+                    <h5>Unlock Your Potential, Learn Today</h5>
+                    <h1>Our Life Changing Courses</h1>
                 </div>
             </div>
         </div>
@@ -97,7 +359,7 @@
 
     <section class="meetings-page" id="meetings">
         <div class="container">
-            <h2 class="section-title">Featured Courses</h2>
+            {% comment %} <h2 class="section-title">Featured Courses</h2> {% endcomment %}
             <div class="course-container">
                 {% for course in courses %}
                     <div class="course-card">
