@@ -31,6 +31,11 @@ class Course(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     cover_image = models.ImageField(upload_to='course_images/', blank=True, null=True)
     content_upload = models.FileField(upload_to='course_content/', blank=True, null=True)
+    course_files = models.FileField(upload_to='course_files/', null=True, blank=True)
+
+    likers = models.ManyToManyField(User, related_name='liked_courses', blank=True)
+    cart_users = models.ManyToManyField(User, related_name='cart_courses', blank=True)
+    buyers = models.ManyToManyField(User, related_name='bought_courses', blank=True)
 
     def __str__(self):
         return self.title
@@ -49,3 +54,5 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} by {self.user.username} for {self.course.title}"
+    
+

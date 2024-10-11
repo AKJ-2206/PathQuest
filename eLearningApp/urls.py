@@ -1,6 +1,6 @@
 from  django.urls import path
 from . import views
-from django.urls import path
+from django.urls import path,include
 from django.contrib.auth import views as auth_views
 from . import views
 from .views import contact_message, update_profile, profile_view 
@@ -34,6 +34,22 @@ urlpatterns = [
     path('course/<int:course_id>/pdf/<str:file_name>/', views.view_pdf, name='view_pdf'),
     path('course/<int:course_id>/video/<str:file_name>/', views.view_video, name='view_video'),
     path('profile/<int:user_id>/', views.user_profile, name='profile'),
+    path('course/<int:course_id>/file/<str:file_name>/', views.view_course_file, name='view_course_file'),
+    path('courses', views.course_showcase, name="courses"),
+    path('showcase/', views.course_showcase, name='course_showcase'),
+    path('course/<int:id>/', views.course_detail, name='course_detail'),
+
+    #  path('course/<int:course_id>/like/', views.like_course, name='like_course'),
+    # path('course/<int:course_id>/add-to-cart/', views.add_to_cart, name='add_to_cart'),
+    # path('course/<int:course_id>/purchase/', views.purchase_course, name='purchase_course'),
+
+    
+
+    # ... (existing paths)
+    path('course/<int:course_id>/like/', views.like_course, name='like_course'),
+    path('course/<int:course_id>/add-to-cart/', views.add_to_cart, name='add_to_cart'),
+    path('course/<int:course_id>/purchase/', views.purchase_course, name='purchase_course'),
+    path('profile/', views.user_profile, name='user_profile'),
     
     
 ]

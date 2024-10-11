@@ -23,13 +23,10 @@ from django.http import FileResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
-
-
-
-
-
-
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import Profile
+from django.contrib.auth.models import User
 
 
 def index(request):
@@ -113,6 +110,15 @@ def contact_message(request):
         return redirect('index')  
     return redirect('index')
 
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.get_or_create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
+
 def update_profile(request):
     try:
         profile = Profile.objects.get(user=request.user)
@@ -135,9 +141,24 @@ def profile_view(request, user_id):
     
     context = {
         'user': user,
-        'uploaded_courses': uploaded_courses,  
+        'uploaded_courses': uploaded_courses, 
+        
+         
     }
     return render(request, 'User/profile.html', context)
+
+# @login_required
+# def profile_view(request,user_id):
+#     user = get_object_or_404(User, id=user_id)
+#     context = {
+#         'user': user,
+#         'uploaded_courses': user.courses_created.all(),
+#         'purchased_courses': user.courses_bought.all(),
+#         'liked_courses': user.liked_courses.all(),
+#         'cart_courses': user.cart_courses.all(),
+#     }
+#     return render(request, 'User/profile.html', context)
+
 
 
   
@@ -272,7 +293,20 @@ def edit_course(request, course_id):
 
 def view_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-    return render(request, 'User/course_detail.html', {'course': course})
+    course_files = []
+    
+    if course.course_files:
+        zip_path = course.course_files.path
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            course_files = zip_ref.namelist()
+    
+    context = {
+        'course': course,
+        'course_files': course_files,
+    }
+    return render(request, 'User/course_detail.html', context)
+    # course = get_object_or_404(Course, id=course_id)
+    # return render(request, 'User/course_detail.html', {'course': course})
 
 def view_pdf(request, course_id, file_name):
     course = get_object_or_404(Course, id=course_id)
@@ -300,3 +334,92 @@ def view_video(request, course_id, file_name):
 
 
 
+def view_course_file(request, course_id, file_name):
+    course = get_object_or_404(Course, id=course_id)
+    file_path = os.path.join(settings.MEDIA_ROOT, 'course_files', course_id, file_name)
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'), content_type='application/octet-stream')
+    raise Http404("File not found")
+
+# def course_detail(request, course_id):
+#     course = get_object_or_404(Course, id=course_id)
+#     course_files = []
+    
+#     if course.course_files:
+#         zip_path = course.course_files.path
+#         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+#             course_files = zip_ref.namelist()
+    
+#     context = {
+#         'course': course,
+#         'course_files': course_files,
+#     }
+#     return render(request, 'User/course_detail.html', context)
+
+
+def course_showcase(request):
+    courses = Course.objects.all().order_by('-created_at')[:10]  # Get the 10 most recent courses
+    return render(request, 'User/course_showcase.html', {'courses': courses})
+
+
+
+@login_required
+def like_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    if request.user in course.likers.all():
+        course.likers.remove(request.user)
+    else:
+        course.likers.add(request.user)
+    return redirect('view_course', course_id=course_id)
+
+@login_required
+def add_to_cart(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    if request.user in course.cart_users.all():
+        course.cart_users.remove(request.user)
+    else:
+        course.cart_users.add(request.user)
+    return redirect('view_course', course_id=course_id)
+
+@login_required
+def purchase_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    if request.user not in course.buyers.all():
+        course.buyers.add(request.user)
+        course.cart_users.remove(request.user)  # Remove from cart after purchase
+    return redirect('view_course', course_id=course_id)
+
+
+@login_required
+def user_profile(request):
+    user = request.user
+    liked_courses = user.liked_courses.all()
+    cart_courses = user.cart_courses.all()
+    purchased_courses = user.purchased_courses.all()
+    return render(request, 'User/profile.html', {
+        'liked_courses': liked_courses,
+        'cart_courses': cart_courses,
+        'purchased_courses': purchased_courses
+    })
+
+
+# @login_required
+# def user_courses(request):
+    
+#     liked_courses = Course.objects.filter(likers=request.user)
+#     cart_courses = Course.objects.filter(cart_users=request.user)
+#     purchased_courses = Course.objects.filter(buyers=request.user)
+
+#     context = {
+#         'liked_courses': liked_courses,
+#         'cart_courses': cart_courses,
+#         'purchased_courses': purchased_courses,
+#     }
+
+#     return render(request, 'users/user_courses.html', context)
+
+
+
+def course_detail(request, id):
+    course = get_object_or_404(Course, id=id)
+    return render(request, 'course_detail.html', {'course': course})

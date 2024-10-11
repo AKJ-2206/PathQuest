@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Template Mo">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <title>Education - List of Meetings</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/templatemo-edu-meeting.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.css' %}">
+    <link rel="stylesheet" href="{% static 'css/lightbox.css' %}">
+    <style>
+        .course-thumbnail {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        .course-thumbnail:hover {
+            opacity: 0.8;
+        }
+        .top-cart {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .course-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 20px;
+        }
+        .course-card {
+            width: calc(25% - 20px);
+            margin-bottom: 20px;
+        }
+        .course-info {
+            padding: 10px;
+        }
+        .course-title {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .instructor-name {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .course-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Cart -->
+    <div class="top-cart">
+        <i class="fa fa-shopping-cart"></i> Cart (<span id="cart-count">0</span>)
+    </div>
+
+    <!-- Sub Header -->
+    <div class="sub-header">
+        <!-- ... (sub-header content remains unchanged) ... -->
+    </div>
+
+    <!-- Header Area -->
+    <header class="header-area header-sticky">
+        <!-- ... (header content remains unchanged) ... -->
+    </header>
+
+    <section class="heading-page header-text" id="top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h6>Here are our upcoming meetings</h6>
+                    <h2>Upcoming Meetings</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="meetings-page" id="meetings">
+        <div class="container">
+            <h2 class="section-title">Featured Courses</h2>
+            <div class="course-container">
+                {% for course in courses %}
+                    <div class="course-card">
+                        <a href="{% url 'view_course' course.id %}">
+                            <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" class="course-thumbnail" onerror="this.src='{% static 'images/default_course_thumbnail.png' %}';">
+                        </a>
+                        <div class="course-info">
+                            <h3 class="course-title">{{ course.title }}</h3>
+                            <span class="instructor-name">{{ course.instructor.username }}</span>
+                            <div class="course-actions">
+                                <button class="btn btn-secondary add-to-cart-btn" onclick="addToCart({{ course.id }})">Add to Cart</button>
+                                <button class="btn btn-primary purchase-btn" onclick="purchaseCourse({{ course.id }})">Purchase</button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/isotope.min.js' %}"></script>
+    <script src="{% static 'js/owl-carousel.js' %}"></script>
+    <script src="{% static 'js/lightbox.js' %}"></script>
+    <script src="{% static 'js/tabs.js' %}"></script>
+    <script src="{% static 'js/isotope.js' %}"></script>
+    <script src="{% static 'js/video.js' %}"></script>
+    <script src="{% static 'js/slick-slider.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+    <script>
+        let cartCount = 0;
+
+        function addToCart(courseId) {
+            cartCount++;
+            updateCartCount();
+            // Add logic to actually add the course to the cart
+        }
+
+        function updateCartCount() {
+            document.getElementById('cart-count').textContent = cartCount;
+        }
+
+        function purchaseCourse(courseId) {
+            // Add logic for purchasing the course
+            alert('Course ' + courseId + ' purchased!');
+        }
+    </script>
+</body>
+</html>

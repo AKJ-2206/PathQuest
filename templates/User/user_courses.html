@@ -1,0 +1,75 @@
+
+
+<div class="container mt-5">
+    <h2>User's Courses</h2>
+    
+    <!-- Liked Courses Section -->
+    <div class="mt-4">
+        <h3>Liked Courses</h3>
+        {% if liked_courses %}
+            <div class="row">
+                {% for course in liked_courses %}
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ course.title }}</h5>
+                                <p class="card-text">{{ course.description|truncatewords:15 }}</p>
+                                <a href="{% url 'view_course' course.id %}" class="btn btn-primary">View Course</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>You have not liked any courses yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Courses in Cart Section -->
+    <div class="mt-4">
+        <h3>Courses in Cart</h3>
+        {% if cart_courses %}
+            <div class="row">
+                {% for course in cart_courses %}
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ course.title }}</h5>
+                                <p class="card-text">{{ course.description|truncatewords:15 }}</p>
+                                <a href="{% url 'view_course' course.id %}" class="btn btn-primary">View Course</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Your cart is empty.</p>
+        {% endif %}
+    </div>
+
+    <!-- Purchased Courses Section -->
+    <div class="mt-4">
+        <h3>Purchased Courses</h3>
+        {% if purchased_courses %}
+            <div class="row">
+                {% for course in purchased_courses %}
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ course.title }}</h5>
+                                <p class="card-text">{{ course.description|truncatewords:15 }}</p>
+                                <a href="{% url 'view_course' course.id %}" class="btn btn-primary">View Course</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>You have not purchased any courses yet.</p>
+        {% endif %}
+    </div>
+</div>
+
