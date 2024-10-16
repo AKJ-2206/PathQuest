@@ -1,0 +1,25 @@
+{% extends "quizzes/base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Available Quizzes</h1>
+
+{% if topics %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for topic in topics %}
+            <div class="col">
+                <div class="card h-100 quiz-card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ topic.name }}</h5>
+                        <p class="card-text">Test your knowledge in {{ topic.name }} with our comprehensive quiz!</p>
+                        <a href="{% url 'take_quiz' topic.id %}" class="btn btn-primary">Start Quiz</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        No quizzes available at the moment. Check back later!
+    </div>
+{% endif %}
+{% endblock %}

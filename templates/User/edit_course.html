@@ -1,112 +1,107 @@
-{% comment %} 
 {% load static %}
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Course</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Link to your CSS file -->
+    <script src="{% static 'js/script.js' %}"></script> <!-- Link to your JavaScript file -->
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light background color for the page */
+            font-family: Arial, sans-serif; /* Set a clean font */
+        }
 
-<div class="container mt-5">
-    <h2>Edit Course: {{ course.title }}</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" name="title" value="{{ course.title }}" required>
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea class="form-control" id="description" name="description" rows="3" required>{{ course.description }}</textarea>
-        </div>
-        <div class="form-group">
-            <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" name="price" value="{{ course.price }}" step="0.01" min="0" required>
-        </div>
-        <div class="form-group">
-            <label for="cover_image">Cover Image</label>
-            <input type="file" class="form-control-file" id="cover_image" name="cover_image">
-            {% if course.cover_image %}
-                <img src="{{ course.cover_image.url }}" alt="Current cover image" class="mt-2" style="max-width: 200px;">
-            {% endif %}
-        </div>
-        <div class="form-group">
-            <label for="content_upload">Content Upload</label>
-            <input type="file" class="form-control-file" id="content_upload" name="content_upload">
-            {% if course.content_upload %}
-                <p class="mt-2">Current file: {{ course.content_upload.name }}</p>
-            {% endif %}
-        </div>
-        <button type="submit" class="btn btn-primary">Update Course</button>
-    </form>
-</div> {% endcomment %}
-
-
-
-{% load static %}
-
-<style>
-    body {
-        background-color: #f8f9fa;
-        font-family: Arial, sans-serif;
-    }
-
-    .container {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-        margin-bottom: 20px;
-        color: #343a40;
-    }
-
-    .form-group label {
-        font-weight: bold;
-        color: #495057;
-    }
-
-    .form-control {
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-        transition: border-color 0.3s;
-    }
-
-    .form-control:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    }
-
-    .form-control-file {
-        padding: 10px;
-    }
-
-    .btn {
-        background-color: #007bff;
-        border: none;
-        border-radius: 4px;
-        padding: 10px 15px;
-        font-size: 16px;
-        transition: background-color 0.3s;
-    }
-
-    .btn:hover {
-        background-color: #0056b3;
-    }
-
-    .current-image {
-        max-width: 200px;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-    }
-
-    @media (max-width: 768px) {
         .container {
-            padding: 15px;
+            max-width: 600px; /* Max width for the form container */
+            margin: auto; /* Center the container */
+            background-color: #fff; /* White background for the form */
+            padding: 20px; /* Padding inside the container */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            margin-top: 50px; /* Space above the container */
+        }
+
+        h2 {
+            margin-bottom: 20px; /* Space below the heading */
+            color: #343a40; /* Dark color for the heading */
+        }
+
+        .form-group label {
+            font-weight: bold; /* Bold labels */
+            color: #495057; /* Dark gray for labels */
+        }
+
+        .form-control {
+            border: 1px solid #ced4da; /* Light border for input fields */
+            border-radius: 4px; /* Rounded corners */
+            transition: border-color 0.3s; /* Smooth transition for border color */
+        }
+
+        .form-control:focus {
+            border-color: #007bff; /* Blue border on focus */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Blue shadow on focus */
+        }
+
+        .form-control-file {
+            padding: 10px; /* Padding for file inputs */
         }
 
         .btn {
-            width: 100%;
+            background-color: #007bff; /* Bootstrap primary color */
+            border: none; /* No border */
+            border-radius: 4px; /* Rounded corners */
+            padding: 10px 15px; /* Padding inside buttons */
+            font-size: 16px; /* Font size for buttons */
+            color: white; /* White text */
+            transition: background-color 0.3s; /* Smooth transition for background color */
+            cursor: pointer; /* Pointer cursor on hover */
         }
-    }
-</style>
+
+        .btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        .current-image {
+            max-width: 100%; /* Responsive image */
+            border: 1px solid #ced4da; /* Light border for current image */
+            border-radius: 4px; /* Rounded corners */
+            margin-top: 10px; /* Space above the image */
+        }
+
+        .alert {
+            padding: 10px; /* Padding for alerts */
+            margin-top: 10px; /* Space above alerts */
+            border: 1px solid transparent; /* Border for alerts */
+            border-radius: 4px; /* Rounded corners */
+        }
+
+        .alert-success {
+            background-color: #d4edda; /* Green background for success */
+            border-color: #c3e6cb; /* Green border */
+            color: #155724; /* Dark green text */
+        }
+
+        .alert-danger {
+            background-color: #f8d7da; /* Red background for errors */
+            border-color: #f5c6cb; /* Red border */
+            color: #721c24; /* Dark red text */
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px; /* Less padding on small screens */
+            }
+
+            .btn {
+                width: 100%; /* Full-width buttons on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
 
 <div class="container mt-5">
     <h2>Edit Course: {{ course.title }}</h2>
@@ -138,7 +133,7 @@
                 <p class="mt-2">Current file: {{ course.content_upload.name }}</p>
             {% endif %}
         </div>
-        <button type="submit" class="btn btn-primary">Update Course</button>
+        <button type="submit" class="btn">Update Course</button>
     </form>
 </div>
 
@@ -179,3 +174,6 @@
         });
     });
 </script>
+
+</body>
+</html>

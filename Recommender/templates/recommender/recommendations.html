@@ -1,0 +1,29 @@
+<!-- recommender/templates/recommender/recommendations.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Recommendations</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; }
+        h1 { color: #333; }
+        .course { background-color: #f4f4f4; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 15px; }
+        .course h2 { margin-top: 0; }
+        .course a { color: #007bff; text-decoration: none; }
+        .course a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Recommended Courses</h1>
+    {% for course in recommendations %}
+        <div class="course">
+            <h2>{{ course.title }}</h2>
+            <p>Instructor: {{ course.instructor_name }}</p>
+            <a href="{{ course.course_url }}" target="_blank">View Course</a>
+        </div>
+    {% empty %}
+        <p>No recommendations available at this time.</p>
+    {% endfor %}
+</body>
+</html>

@@ -38,18 +38,12 @@ urlpatterns = [
     path('courses', views.course_showcase, name="courses"),
     path('showcase/', views.course_showcase, name='course_showcase'),
     path('course/<int:id>/', views.course_detail, name='course_detail'),
-
-    #  path('course/<int:course_id>/like/', views.like_course, name='like_course'),
-    # path('course/<int:course_id>/add-to-cart/', views.add_to_cart, name='add_to_cart'),
-    # path('course/<int:course_id>/purchase/', views.purchase_course, name='purchase_course'),
-
-    
-
-    # ... (existing paths)
-    path('course/<int:course_id>/like/', views.like_course, name='like_course'),
-    path('course/<int:course_id>/add-to-cart/', views.add_to_cart, name='add_to_cart'),
-    path('course/<int:course_id>/purchase/', views.purchase_course, name='purchase_course'),
+    path('course/<int:course_id>/', views.course_detail, name='course_detail'),
+    path('like/<int:course_id>/', views.like_course, name='like_course'),
+    path('cart/<int:course_id>/', views.add_to_cart, name='add_to_cart'),
     path('profile/', views.user_profile, name='user_profile'),
+    path('purchase/<int:course_id>/', views.purchase_course, name='purchase_course'),
+    path('remove_from_cart/<int:course_id>/', views.remove_from_cart, name='remove_from_cart'),
     
-    
+
 ]

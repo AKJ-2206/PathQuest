@@ -29,3 +29,10 @@ class ELearningAppConfig(AppConfig):
 
     def ready(self):
         import eLearningApp.signals
+
+class ElearningappConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'eLearningApp'
+
+    def ready(self):
+        import eLearningApp.signals

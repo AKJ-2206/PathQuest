@@ -13,14 +13,12 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"Message from {self.name} about {self.subject}"
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
-    profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return self.user.username
-    
+
+from django.db import models
+from django.contrib.auth.models import User
+
+
 
 class Course(models.Model):
     title = models.TextField()
@@ -32,13 +30,25 @@ class Course(models.Model):
     cover_image = models.ImageField(upload_to='course_images/', blank=True, null=True)
     content_upload = models.FileField(upload_to='course_content/', blank=True, null=True)
     course_files = models.FileField(upload_to='course_files/', null=True, blank=True)
-
+  
     likers = models.ManyToManyField(User, related_name='liked_courses', blank=True)
     cart_users = models.ManyToManyField(User, related_name='cart_courses', blank=True)
-    buyers = models.ManyToManyField(User, related_name='bought_courses', blank=True)
-
+    buyers = models.ManyToManyField(User, related_name='purchased_courses', blank=True)
     def __str__(self):
         return self.title
+    
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
+    profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
+    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, null=True)
+    liked_courses = models.ManyToManyField(Course, blank=True)
+
+    cart_courses = models.ManyToManyField(Course, related_name='cart_courses', blank=True)
+   
+
+    def __str__(self):
+        return self.user.username
     
 class File(models.Model):
     name = models.CharField(max_length=200)
@@ -55,4 +65,6 @@ class Order(models.Model):
     def __str__(self):
         return f"Order {self.id} by {self.user.username} for {self.course.title}"
     
+
+
 

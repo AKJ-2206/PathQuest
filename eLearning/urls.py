@@ -24,12 +24,17 @@ from dashboard import views
 
 
 
+
 urlpatterns = [
+    
     
     path('admin/', admin.site.urls),
     path('admin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
-   
+    
+    path('recommender/', include('recommender.urls', namespace='recommender')),
+    path('chatbot/', include('chatbot.urls')),
     path('', include('eLearningApp.urls')),
+    path('quizzes/', include('quizzes.urls')),
     
 ] 
 if settings.DEBUG:

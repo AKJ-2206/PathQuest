@@ -76,6 +76,7 @@ def registration(request):
             messages.error(request, f"An unexpected error occurred: {str(e)}")
     return render(request, 'User/registration.html')
 
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -134,30 +135,21 @@ def update_profile(request):
         form = ProfileForm(instance=profile)
     return render(request, 'User/update_profile.html', {'form': form})
 
+
 @login_required
 def profile_view(request, user_id):
     user = get_object_or_404(User, id=user_id)
     uploaded_courses = Course.objects.filter(instructor=user)
-    
+    profile = user.profile
+    liked_courses = profile.liked_courses.all()  # Fetch liked courses
+    cart_courses = profile.cart_courses.all()      # Fetch cart courses
     context = {
         'user': user,
-        'uploaded_courses': uploaded_courses, 
-        
-         
+        'uploaded_courses': uploaded_courses,
+        'liked_courses': liked_courses,  # Add liked courses to context
+        'cart_courses': cart_courses,      # Add cart courses to context
     }
     return render(request, 'User/profile.html', context)
-
-# @login_required
-# def profile_view(request,user_id):
-#     user = get_object_or_404(User, id=user_id)
-#     context = {
-#         'user': user,
-#         'uploaded_courses': user.courses_created.all(),
-#         'purchased_courses': user.courses_bought.all(),
-#         'liked_courses': user.liked_courses.all(),
-#         'cart_courses': user.cart_courses.all(),
-#     }
-#     return render(request, 'User/profile.html', context)
 
 
 
@@ -177,19 +169,15 @@ def update_profile(request):
             if profile_photo:
                 user.profile.profile_photo = profile_photo
             user.profile.save()
-
             return JsonResponse({'success': True})
-
         return JsonResponse({'success': False, 'error': 'User not authenticated'})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
 def courses_view(request):
     courses = Course.objects.all()
-
     for course in courses:
         course.stars = range(course.rating)
-
     return render(request, 'User/index.html', {'courses': courses})
 
 
@@ -197,14 +185,13 @@ def courses_view(request):
 def search_results(request):
     query = request.GET.get('q')
     results = Course.objects.filter(title__icontains=query)  
-    return render(request, 'User/search_results.html', {'results': results})
-
-    
+    return render(request, 'User/search_results.html', {'results': results})  
     return render(request, 'User/search_results.html', {
         'query': query,
         'course_results': course_results,
         'user_results': user_results,
     })
+
 
 
 @login_required
@@ -243,17 +230,6 @@ def upload_course(request):
         form = CourseForm()  
     return render(request, 'User/upload_course.html', {'form': form})
 
-@login_required
-def edit_course(request, course_id):
-    course = get_object_or_404(Course, id=course_id, instructor=request.user)
-    if request.method == 'POST':
-        form = CourseForm(request.POST, request.FILES, instance=course)
-        if form.is_valid():
-            form.save()
-            return redirect('course_detail', course_id=course.id)
-    else:
-        form = CourseForm(instance=course)
-    return render(request, 'User/edit_course.html', {'form': form, 'course': course})
 
 @login_required
 def delete_course(request, course_id):
@@ -278,6 +254,7 @@ def create_course(request):
         form = CourseForm()
     return render(request, 'User/create_course.html', {'form': form})
 
+
 @login_required
 def edit_course(request, course_id):
     course = get_object_or_404(Course, id=course_id, instructor=request.user)
@@ -294,7 +271,6 @@ def edit_course(request, course_id):
 def view_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     course_files = []
-    
     if course.course_files:
         zip_path = course.course_files.path
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
@@ -305,13 +281,10 @@ def view_course(request, course_id):
         'course_files': course_files,
     }
     return render(request, 'User/course_detail.html', context)
-    # course = get_object_or_404(Course, id=course_id)
-    # return render(request, 'User/course_detail.html', {'course': course})
-
+    
 def view_pdf(request, course_id, file_name):
     course = get_object_or_404(Course, id=course_id)
     zip_path = os.path.join(settings.MEDIA_ROOT, str(course.file))
-    
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         try:
             pdf_file = zip_ref.open(file_name)
@@ -341,52 +314,21 @@ def view_course_file(request, course_id, file_name):
         return FileResponse(open(file_path, 'rb'), content_type='application/octet-stream')
     raise Http404("File not found")
 
-# def course_detail(request, course_id):
-#     course = get_object_or_404(Course, id=course_id)
-#     course_files = []
-    
-#     if course.course_files:
-#         zip_path = course.course_files.path
-#         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-#             course_files = zip_ref.namelist()
-    
-#     context = {
-#         'course': course,
-#         'course_files': course_files,
-#     }
-#     return render(request, 'User/course_detail.html', context)
+
 
 
 def course_showcase(request):
-    courses = Course.objects.all().order_by('-created_at')[:10]  # Get the 10 most recent courses
+    courses = Course.objects.all().order_by('-created_at')[:10] 
     return render(request, 'User/course_showcase.html', {'courses': courses})
 
 
-
-@login_required
-def like_course(request, course_id):
-    course = get_object_or_404(Course, id=course_id)
-    if request.user in course.likers.all():
-        course.likers.remove(request.user)
-    else:
-        course.likers.add(request.user)
-    return redirect('view_course', course_id=course_id)
-
-@login_required
-def add_to_cart(request, course_id):
-    course = get_object_or_404(Course, id=course_id)
-    if request.user in course.cart_users.all():
-        course.cart_users.remove(request.user)
-    else:
-        course.cart_users.add(request.user)
-    return redirect('view_course', course_id=course_id)
 
 @login_required
 def purchase_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     if request.user not in course.buyers.all():
         course.buyers.add(request.user)
-        course.cart_users.remove(request.user)  # Remove from cart after purchase
+        course.cart_users.remove(request.user)  
     return redirect('view_course', course_id=course_id)
 
 
@@ -403,23 +345,85 @@ def user_profile(request):
     })
 
 
-# @login_required
-# def user_courses(request):
-    
-#     liked_courses = Course.objects.filter(likers=request.user)
-#     cart_courses = Course.objects.filter(cart_users=request.user)
-#     purchased_courses = Course.objects.filter(buyers=request.user)
-
-#     context = {
-#         'liked_courses': liked_courses,
-#         'cart_courses': cart_courses,
-#         'purchased_courses': purchased_courses,
-#     }
-
-#     return render(request, 'users/user_courses.html', context)
-
-
 
 def course_detail(request, id):
     course = get_object_or_404(Course, id=id)
     return render(request, 'course_detail.html', {'course': course})
+
+from django.contrib.auth.admin import UserAdmin
+class CustomUserAdmin(UserAdmin):
+    def save_model(self, request, obj, form, change):
+        print("Saving user:", obj)
+        super().save_model(request, obj, form, change)
+
+
+from django.contrib import admin
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
+
+
+
+
+
+
+
+from .models import Course, Profile
+
+
+def course_detail(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    context = {
+        'course': course,
+        'is_liked': request.user in course.likers.all() if request.user.is_authenticated else False,
+        'in_cart': request.user in course.cart_users.all() if request.user.is_authenticated else False,
+    }
+    return render(request, 'course_detail.html', context)
+
+@login_required
+def like_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    user = request.user
+    if user in course.likers.all():
+        course.likers.remove(user)
+        liked = False
+    else:
+        course.likers.add(user)
+        liked = True
+    return JsonResponse({'liked': liked})
+
+@login_required
+def add_to_cart(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    user = request.user
+    if user in course.cart_users.all():
+        course.cart_users.remove(user)
+        in_cart = False
+    else:
+        course.cart_users.add(user)
+        in_cart = True
+    return JsonResponse({'in_cart': in_cart})
+
+@login_required
+def user_profile(request):
+    user = request.user
+    liked_courses = user.liked_courses.all()
+    cart_courses = user.cart_courses.all()
+    purchased_courses = user.purchased_courses.all()
+    context = {
+        'liked_courses': liked_courses,
+        'cart_courses': cart_courses,
+        'purchased_courses': purchased_courses,
+    }
+    return render(request, 'user_profile.html', context)
+
+@login_required
+def remove_from_cart(request, course_id):
+    # Get the course that the user wants to remove
+    course = get_object_or_404(Course, id=course_id)
+    
+    # Assuming the Course model has a many-to-many field with the User model for the cart
+    if request.user in course.cart_users.all():
+        course.cart_users.remove(request.user)  # Remove the user from the cart_users for that course
+    
+    # Redirect to the course detail page or the cart page
+    return redirect('view_cart')  # Adjust 'view_cart' to your actual cart page URL name

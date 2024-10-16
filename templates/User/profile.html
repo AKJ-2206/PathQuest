@@ -26,13 +26,13 @@
             --text-color: #ffffff;
         }
         body {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
-    color: var(--text-color);
-    background: transparent; /* Makes the background transparent */
-    overflow-x: hidden;
-}
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background: transparent;
+            overflow-x: hidden;
+        }
         #bg-video {
             position: fixed;
             right: 0;
@@ -91,19 +91,18 @@
             text-decoration: none;
             display: inline-block;
         }
-
         .edit-course-btn, .delete-course-btn {
-    padding: 5px 10px;
-    margin: 0 5px;
-    border-radius: 5px;
-    font-size: 12px;
-}
-.edit-course-btn {
-    background-color: #4CAF50;
-}
-.delete-course-btn {
-    background-color: #f44336;
-}
+            padding: 5px 10px;
+            margin: 0 5px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        .edit-course-btn {
+            background-color: #4CAF50;
+        }
+        .delete-course-btn {
+            background-color: #f44336;
+        }
         .edit-btn {
             position: absolute;
             top: 10px;
@@ -121,32 +120,27 @@
             padding-bottom: 10px;
             color: var(--primary-color);
         }
-
         .bio-section {
-    background-color: #f0f0f0; /* Light gray background for the section */
-    padding: 20px;             /* Space around the content */
-    border-radius: 8px;        /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    max-width: 600px;          /* Optional: Limit the width for readability */
-    margin: 20px auto;         /* Center the section and add spacing */
-}
-
-.bio-section h3 {
-    margin-top: 0;
-    font-size: 24px;
-    color: #333;               /* Darker color for the heading */
-}
-
-.bio-section p {
-    font-size: 16px;
-    color: #555;               /* Darker color for readability */
-    background-color: #ffffff; /* Solid white background for the paragraph */
-    padding: 15px;             /* Space around the description */
-    border-radius: 4px;        /* Rounded corners for the paragraph */
-    line-height: 1.5;          /* Improve readability */
-}
-         
-
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .bio-section h3 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        .bio-section p {
+            font-size: 16px;
+            color: #555;
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 4px;
+            line-height: 1.5;
+        }
         .courses-list, .liked-courses, .uploaded-courses {
             margin-top: 20px;
         }
@@ -165,7 +159,6 @@
             justify-content: space-between;
             align-items: center;
         }
-        
         .courses-list li:hover, .liked-courses li:hover, .uploaded-courses li:hover {
             transform: translateY(-3px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -226,6 +219,40 @@
         }
         .nav a:hover {
             background-color: rgba(255, 255, 255, 0.1);
+        }
+        .liked-courses-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 20px 0;
+        }
+        .course-cover {
+            flex: 0 0 auto;
+            width: 4cm;
+            margin-bottom: 10px;
+        }
+        .course-cover img {
+            width: 4cm;
+            height: 5cm;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .like-button {
+            display: block;
+            width: 100%;
+            padding: 5px;
+            margin-top: 5px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .like-button:hover {
+            background-color: var(--secondary-color);
         }
     </style>
 </head>
@@ -314,28 +341,43 @@
             </ul>
         </div>
 
-        <h2 class="section-title">Liked Courses</h2>
-        <div class="liked-courses">
-            <ul>
-                {% for course in user.profile.liked_courses.all %}
-                    <li>{{ course.title }}</li>
-                {% empty %}
-                    <li>No liked courses yet.</li>
-                {% endfor %}
-            </ul>
+        {% comment %} <h2 class="section-title">Liked Courses</h2>
+<div class="liked-courses">
+    <ul>
+        {% for course in user.profile.liked_courses.all %}
+            <li>{{ course.title }}</li>
+        {% empty %}
+            <li>No liked courses yet.</li>
+        {% endfor %}
+    </ul>
+</div> {% endcomment %}
+
+
+ <h2 class="section-title">Liked Courses</h2>
+        <div class="liked-courses-grid">
+            {% for course in liked_courses %}
+                <div class="course-cover" id="course-{{ course.id }}">
+                    <a href="{% url 'course_detail' course.id %}">
+                        <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" onerror="this.src='{% static 'images/default_course_thumbnail.png' %}';">
+                    </a>
+                    <button class="like-button" data-course-id="{{ course.id }}">Unlike</button>
+                </div>
+            {% empty %}
+                <p>You haven't liked any courses yet.</p>
+            {% endfor %}
         </div>
 
-        <h2 class="section-title">Cart Courses</h2>
-        <div class="liked-courses">
-            <ul>
-                {% for course in user.profile.cart_courses.all %}
-                    <li>{{ course.title }}</li>
-                {% empty %}
-                    <li>No liked courses yet.</li>
-                {% endfor %}
-            </ul>
-        </div>
 
+       <h2 class="section-title">Cart Courses</h2>
+<div class="cart-courses">
+    <ul>
+        {% for course in user.profile.cart_courses.all %}
+            <li>{{ course.title }}</li>
+        {% empty %}
+            <li>No courses in the cart yet.</li>
+        {% endfor %}
+    </ul>
+</div>
         <h2 class="section-title">Uploaded Courses</h2>
         <div class="uploaded-courses">
         
@@ -365,6 +407,67 @@
             <a href="{% url 'upload_course' %}" class="upload-course-btn">Upload Course</a>
         </div>
     </div>
+
+    <script>
+document.querySelectorAll('.like-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const courseId = this.getAttribute('data-course-id');
+        fetch(`/like_course/${courseId}/`, {method: 'POST'})
+            .then(response => response.json())
+            .then(data => {
+                if (data.liked) {
+                    this.textContent = 'Unlike';
+                } else {
+                    this.textContent = 'Like';
+                    this.closest('.course-cover').remove();
+                }
+            });
+    });
+});
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.like-button').click(function() {
+        var courseId = $(this).data('course-id');
+        var button = $(this);
+        
+        $.ajax({
+            url: '/like_course/' + courseId + '/',
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            success: function(data) {
+                if (data.liked === false) {
+                    $('#course-' + courseId).remove();
+                    if ($('.course-cover').length === 0) {
+                        $('.liked-courses-grid').html('<p>You haven\'t liked any courses yet.</p>');
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    });
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
 
 </body>
 </html> 

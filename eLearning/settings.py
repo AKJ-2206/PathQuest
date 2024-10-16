@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'eLearningApp',
     
     'dashboard',
+    'recommender',
+     'chatbot',
+     'quizzes',
     
     # ... any other apps you have
 ]
